@@ -37,7 +37,7 @@ class SignInScreen extends StatelessWidget {
 
               // 1. Top Logo (FIXED: Uses an Icon instead of a missing image)
               Image.asset(
-                'assets/AM_logo', // <--- Change this to your file name
+                'assets/AM_logo.png', // <--- Change this to your file name
                 height: 120, // Adjust height to make it bigger/smaller
                 width: 120,
                 fit: BoxFit.contain, // This stops it from stretching
@@ -168,7 +168,7 @@ class SignInScreen extends StatelessWidget {
               Image.asset(
                 'assets/AM_logo2.png', // Make sure this matches your filename exactly
                 height:
-                    200, // You can change this number to make it bigger/smallerwifh
+                    150, // You can change this number to make it bigger/smallerwifh
                 width: 400,
                 fit: BoxFit.contain,
               ),
