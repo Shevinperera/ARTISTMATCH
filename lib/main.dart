@@ -1,29 +1,20 @@
 import 'package:flutter/material.dart';
-import 'Pages/login_page.dart'; // <--- 1. IMPORTANT: Connects to your new file
 
 void main() {
-  runApp(const ArtistMatchApp());
+  runApp(const MainApp());
 }
 
-class ArtistMatchApp extends StatelessWidget {
-  const ArtistMatchApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, // Removes the "Debug" banner
-      title: 'ArtistMatch',
-      
-      // 2. THEME: You can set your app-wide colors here later
-      theme: ThemeData(
-        brightness: Brightness.dark, // Default to dark mode
-        primaryColor: const Color(0xFF0091EA), // Your brand blue
-        scaffoldBackgroundColor: const Color(0xFF121212), // Your background
-        useMaterial3: true,
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello World!'),
+        ),
       ),
-
-      // 3. HOME: This tells the app "Start here!"
-      home: const SignInScreen(), 
     );
   }
 }
