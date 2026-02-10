@@ -139,7 +139,7 @@ class GigPostPage extends StatelessWidget { // <--- This is the Class Name!
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Image Placeholder
+        // Image Placeholder 
         Container(
           height: 180,
           width: double.infinity,
