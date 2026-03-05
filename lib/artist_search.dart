@@ -181,9 +181,8 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
         image: const DecorationImage(
-          image: NetworkImage('https://piscum.photos/343x136'),
+          image: AssetImage('assets/trending_banner.png'),
           fit: BoxFit.cover,
-          onError: (_, __) {},
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
@@ -203,7 +202,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
             ),
           ),
           // Title
-          const Positioned(
+          /*const Positioned(
             left: 20,
             top: 54,
             child: Text(
@@ -239,7 +238,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                 );
               }),
             ),
-          ),
+          ),*/
         ],
       ),
     );
