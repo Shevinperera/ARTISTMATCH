@@ -12,10 +12,10 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
   int _selectedNavIndex = 0;
 
   final List<Map<String, String>> _suggestedArtists = [
-    {'name': 'Costa', 'image': 'https://placehold.co/76x76'},
-    {'name': 'Misfit', 'image': 'https://placehold.co/76x76'},
-    {'name': 'SG Lewis', 'image': 'https://placehold.co/76x76'},
-    {'name': 'Chase Atlantic', 'image': 'https://placehold.co/76x76'},
+    {'name': 'Costa', 'image': 'https://piscum.photos/76x76'},
+    {'name': 'Misfit', 'image': 'https://piscum.photos/76x76'},
+    {'name': 'SG Lewis', 'image': 'https://piscum.photos/76x76'},
+    {'name': 'Chase Atlantic', 'image': 'https://piscum.photos/76x76'},
   ];
 
   final List<Map<String, String>> _newReleases = [
@@ -23,19 +23,19 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
       'title': '3005',
       'artist': 'Misfit',
       'time': '3 Days Ago',
-      'image': 'https://placehold.co/148x148',
+      'image': 'https://piscum.photos/148x148',
     },
     {
       'title': 'HEAT',
       'artist': 'Tove Lo, SG Lewis',
       'time': 'Last Month',
-      'image': 'https://placehold.co/148x148',
+      'image': 'https://piscum.photos/148x148',
     },
     {
       'title': "don's panic",
       'artist': 'soscamo',
       'time': 'Last Year',
-      'image': 'https://placehold.co/148x148',
+      'image': 'https://piscum.photos/148x148',
     },
   ];
 
@@ -181,8 +181,9 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
         image: const DecorationImage(
-          image: NetworkImage('https://placehold.co/343x136'),
+          image: NetworkImage('https://piscum.photos/343x136'),
           fit: BoxFit.cover,
+          onError: (_, __) {},
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
@@ -277,7 +278,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
 
   Widget _buildSuggestedArtists() {
     return SizedBox(
-      height: 116,
+      height: 120,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -299,6 +300,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                     image: DecorationImage(
                       image: NetworkImage(artist['image']!),
                       fit: BoxFit.cover,
+                      onError: (_, __) {},
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(38),
@@ -331,7 +333,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
 
   Widget _buildNewReleases() {
     return SizedBox(
-      height: 230,
+      height: 240,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -351,6 +353,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                     image: DecorationImage(
                       image: NetworkImage(release['image']!),
                       fit: BoxFit.cover,
+                      onError: (_, __) {},
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
