@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'artist_search_filters.dart';
 // Artist Search update test
 class ArtistSearchPage extends StatefulWidget {
   const ArtistSearchPage({super.key});
@@ -80,16 +81,31 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF595959),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => DraggableScrollableSheet(
+                          initialChildSize: 0.85,
+                          minChildSize: 0.5,
+                          maxChildSize: 0.95,
+                          builder: (_, controller) => const SearchFiltersPage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFF595959),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
+                      child: const Icon(Icons.tune, color: Color(0xFFF7F7F7), size: 20),
                     ),
-                    child: const Icon(Icons.tune, color: Color(0xFFF7F7F7), size: 20),
                   ),
                 ],
               ),
@@ -109,8 +125,6 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                   _buildFilterChip(Icons.favorite_border, 'Favorites'),
                   const SizedBox(width: 8),
                   _buildFilterChip(Icons.person_add_alt_outlined, 'Following'),
-                  const SizedBox(width: 8),
-                  _buildFilterChip(Icons.receipt_long_outlined, 'Orders'),
                 ],
               ),
             ),
