@@ -113,7 +113,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
 
             const SizedBox(height: 8),
 
-            // Filter chips
+            /*// Filter chips
             SizedBox(
               height: 40,
               child: ListView(
@@ -127,7 +127,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                   _buildFilterChip(Icons.person_add_alt_outlined, 'Following'),
                 ],
               ),
-            ),
+            ),*/
 
             const SizedBox(height: 8),
 
