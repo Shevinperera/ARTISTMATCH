@@ -113,7 +113,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
 
             const SizedBox(height: 8),
 
-            /*// Filter chips
+            /*// Filter chips (have to put this later when we have actual filters to show)
             SizedBox(
               height: 40,
               child: ListView(
