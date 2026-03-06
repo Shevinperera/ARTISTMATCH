@@ -8,11 +8,11 @@ class SearchFiltersPage extends StatefulWidget {
 }
 
 class _SearchFiltersPageState extends State<SearchFiltersPage> {
-  String? _selectedRole;
-  String? _selectedGenre;
-  String? _selectedTrackType;
+  List<String> _selectedRoles = [];
+  List<String> _selectedGenres = [];
+  List<String> _selectedTrackTypes = [];
+  List<String> _selectedLanguages = [];
   String? _selectedGender;
-  String? _selectedLanguage;
   String? _selectedExp;
   String? _selectedLocation;
 
@@ -84,28 +84,25 @@ class _SearchFiltersPageState extends State<SearchFiltersPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildFilterDropdown(
+                  _buildMultiSelectChips(
                     label: 'Roles',
-                    hint: 'Select Artist Roles',
-                    value: _selectedRole,
-                    items: _roles,
-                    onChanged: (val) => setState(() => _selectedRole = val),
+                    options: _roles,
+                    selected: _selectedRoles,
+                    onChanged: (val) => setState(() => _selectedRoles = val),
                   ),
                   const SizedBox(height: 16),
-                  _buildFilterDropdown(
+                  _buildMultiSelectChips(
                     label: 'Genre',
-                    hint: 'Select Genres',
-                    value: _selectedGenre,
-                    items: _genres,
-                    onChanged: (val) => setState(() => _selectedGenre = val),
+                    options: _genres,
+                    selected: _selectedGenres,
+                    onChanged: (val) => setState(() => _selectedGenres = val),
                   ),
                   const SizedBox(height: 16),
-                  _buildFilterDropdown(
+                  _buildMultiSelectChips(
                     label: 'Track Types',
-                    hint: 'Select Type',
-                    value: _selectedTrackType,
-                    items: _trackTypes,
-                    onChanged: (val) => setState(() => _selectedTrackType = val),
+                    options: _trackTypes,
+                    selected: _selectedTrackTypes,
+                    onChanged: (val) => setState(() => _selectedTrackTypes = val),
                   ),
                   const SizedBox(height: 16),
                   _buildFilterDropdown(
@@ -116,12 +113,11 @@ class _SearchFiltersPageState extends State<SearchFiltersPage> {
                     onChanged: (val) => setState(() => _selectedGender = val),
                   ),
                   const SizedBox(height: 16),
-                  _buildFilterDropdown(
+                  _buildMultiSelectChips(
                     label: 'Preferred Languages',
-                    hint: 'Select Languages',
-                    value: _selectedLanguage,
-                    items: _languages,
-                    onChanged: (val) => setState(() => _selectedLanguage = val),
+                    options: _languages,
+                    selected: _selectedLanguages,
+                    onChanged: (val) => setState(() => _selectedLanguages = val),
                   ),
                   const SizedBox(height: 16),
                   _buildFilterDropdown(
@@ -173,11 +169,11 @@ class _SearchFiltersPageState extends State<SearchFiltersPage> {
                     child: OutlinedButton(
                       onPressed: () {
                         setState(() {
-                          _selectedRole = null;
-                          _selectedGenre = null;
-                          _selectedTrackType = null;
+                          _selectedRoles = [];
+                          _selectedGenres = [];
+                          _selectedTrackTypes = [];
                           _selectedGender = null;
-                          _selectedLanguage = null;
+                          _selectedLanguages = [];
                           _selectedExp = null;
                           _selectedLocation = null;
                         });
@@ -270,6 +266,69 @@ class _SearchFiltersPageState extends State<SearchFiltersPage> {
               onChanged: onChanged,
             ),
           ),
+        ),
+      ],
+    );
+  }
+  Widget _buildMultiSelectChips({
+    required String label,
+    required List<String> options,
+    required List<String> selected,
+    required ValueChanged<List<String>> onChanged,
+    }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Color(0xFFF2F2F2),
+            fontSize: 16,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+            height: 1.40,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: options.map((option) {
+            final isSelected = selected.contains(option);
+            return GestureDetector(
+              onTap: () {
+                final updated = List<String>.from(selected);
+                if (isSelected) {
+                  updated.remove(option);
+                } else {
+                  updated.add(option);
+                }
+                onChanged(updated);
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: ShapeDecoration(
+                  color: isSelected ? Colors.white : Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      width: 1,
+                      color: isSelected ? Colors.white : const Color(0xFF595959),
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: Text(
+                  option,
+                  style: TextStyle(
+                    color: isSelected ? Colors.black : const Color(0xFFF2F2F2),
+                    fontSize: 14,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
         ),
       ],
     );
