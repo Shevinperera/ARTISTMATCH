@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'artist_search_filters.dart';
+import 'notifications_page.dart';
 // Artist Search update test
 class ArtistSearchPage extends StatefulWidget {
   const ArtistSearchPage({super.key});
@@ -449,7 +450,16 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
         children: List.generate(items.length, (index) {
           final isSelected = _selectedNavIndex == index;
           return GestureDetector(
-            onTap: () => setState(() => _selectedNavIndex = index),
+            onTap: () {
+              if (index == 3) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                );
+              } else {
+                setState(() => _selectedNavIndex = index);
+              }
+            },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
