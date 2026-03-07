@@ -41,6 +41,7 @@ class _GigPostPageState extends State<GigPostPage> {
       MaterialPageRoute(builder: (context) => const CreateGigPage()),
       
     );
+    // fn 
     if (result != null) {
       setState(() {
         // .insert(0, ...) puts the newest gig at the VERY TOP of the feed
@@ -126,12 +127,8 @@ class _GigPostPageState extends State<GigPostPage> {
 ), // <--- 6. Closes the top-level Padding
 ), // <--- 7. Closes the SafeArea
 
-// --- BOTTOM NAVIGATION BAR ---
-bottomNavigationBar:
-      
-        
-        const CustomNavBar(currentIndex: 0), // 0 means highlight the Home icon
-      );    
+
+    );
   }
 
   // --- HELPER: GIG CARD ---

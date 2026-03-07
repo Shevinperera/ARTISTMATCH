@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'gig_post_page.dart';
+import 'static_nav.dart'; 
 
 void main() {
   runApp(const ArtistMatchApp());
@@ -88,11 +89,9 @@ class SignInScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const GigPostPage()),
-                    );
-                    
-                  },
+                 onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()),);
+                              },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: brandBlue,
                     shape: RoundedRectangleBorder(
