@@ -150,8 +150,6 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                 ),
               ),
             ),
-
-            _buildBottomNav(),
           ],
         ),
       ),
