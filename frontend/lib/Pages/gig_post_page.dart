@@ -161,7 +161,12 @@ class _GigPostPageState extends State<GigPostPage> {
             Text("$price / night", style: const TextStyle(color: Colors.white, fontSize: 16)),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ApplyPage()),);
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>  ApplyPage(
+                  gigTitle: title,
+                  gigDate: date,
+                  gigLocation: location,
+                  price: price,
+                )),);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0091EA),
