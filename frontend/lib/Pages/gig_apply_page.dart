@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'gig_post_page.dart';
 // import 'gig_post_page.dart';
 
 void main() => runApp(const MyApp());
@@ -10,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const ApplyPage(),
+      home: const GigPostPage(),
     );
   }
 }
@@ -28,7 +30,17 @@ const kTextMuted  = Color(0xFF555555);
 
 // ─── Entry point screen ───────────────────────────────────────────────────────
 class ApplyPage extends StatefulWidget {
-  const ApplyPage({super.key});
+  final String gigTitle;
+  final String gigDate;
+  final String gigLocation;
+  final String price;
+  const ApplyPage({
+    super.key,
+    required this.gigTitle,
+    required this.gigDate,
+    required this.gigLocation,
+    required this.price,
+  });
   @override
   State<ApplyPage> createState() => _ApplyPageState();
 }
@@ -102,11 +114,11 @@ class _ApplyPageState extends State<ApplyPage> {
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: kBlue.withOpacity(.2)),
                 ),
-                child: const Column(children: [
-                  Text('🎵  Acoustic Night',
+                child:  Column(children: [
+                  Text('🎵  ${widget.gigTitle}',
                       style: TextStyle(color: kTextPri, fontWeight: FontWeight.w700, fontSize: 16)),
                   SizedBox(height: 6),
-                  Text('January 15, 7pm', style: TextStyle(color: kTextSec, fontSize: 12)),
+                  Text('${widget.gigDate}', style: TextStyle(color: kTextSec, fontSize: 12)),
                 ]),
               ),
               const SizedBox(height: 32),
@@ -197,18 +209,18 @@ class _ApplyPageState extends State<ApplyPage> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Acoustic Night',
+              children:  [
+                Text(widget.gigTitle,
                     style: TextStyle(color: kTextPri, fontWeight: FontWeight.w600, fontSize: 15)),
                 SizedBox(height: 3),
-                Text('📍 Hilton, Colombo  •  Jan 15, 7pm',
+                Text('📍 ${widget.gigLocation}  •  ${widget.gigDate}',
                     style: TextStyle(color: kTextSec, fontSize: 11)),
               ],
             ),
           ),
           RichText(
-            text: const TextSpan(children: [
-              TextSpan(text: 'Rs 20,000',
+            text:  TextSpan(children: [
+              TextSpan(text: widget.price,
                   style: TextStyle(color: kBlue, fontWeight: FontWeight.w700, fontSize: 14)),
               TextSpan(text: '/night',
                   style: TextStyle(color: kTextMuted, fontSize: 11)),
