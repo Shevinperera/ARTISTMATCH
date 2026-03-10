@@ -114,7 +114,7 @@ class _ApplyPageState extends State<ApplyPage> {
                 width: double.infinity,
                 child: _GradientButton(
                   label: 'Back to Gigs',
-                  onTap: () => Navigator.pop(context)
+                  onTap: () => setState(() { _submitted = false; _step = 1; }),
                 ),
               ),
             ],
