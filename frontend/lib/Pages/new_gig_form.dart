@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-// ─── Color palette (matches apply page) ──────────────────────────────────────
-const kBg        = Color(0xFF0D0D1A);
+// ─── Color palette (matches apply page)
+const kBg        = Color(0xFF000000);
 const kCard      = Color(0xFF1A1A2E);
 const kCardDeep  = Color(0xFF16213E);
 const kBorder    = Color(0xFF2A2A3A);
@@ -19,7 +19,7 @@ class CreateGigPage extends StatefulWidget {
 }
 
 class _CreateGigPageState extends State<CreateGigPage> {
-  // ── Your original controllers (unchanged) ────────────────────────────────
+  // ── Your original controllers (unchanged) 
   final titleController    = TextEditingController();
   final locationController = TextEditingController();
   final priceController    = TextEditingController();
@@ -41,7 +41,7 @@ class _CreateGigPageState extends State<CreateGigPage> {
   }
 
   void _submit() {
-    // ── Your original Navigator.pop logic (unchanged) ─────────────────────
+    // ── Your original Navigator.pop logic (unchanged) 
     final newGigData = {
       "title":    titleController.text.isEmpty    ? "Untitled Gig"     : titleController.text,
       "location": locationController.text.isEmpty ? "Unknown Location" : locationController.text,
@@ -59,7 +59,7 @@ class _CreateGigPageState extends State<CreateGigPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── Header ───────────────────────────────────────────────────────
+            // ── Header
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
               child: Row(
@@ -83,7 +83,7 @@ class _CreateGigPageState extends State<CreateGigPage> {
               ),
             ),
 
-            // ── Scrollable Form ──────────────────────────────────────────────
+            // ── Scrollable Form 
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -234,26 +234,6 @@ class _CreateGigPageState extends State<CreateGigPage> {
               ),
             ),
 
-            // ── POST GIG Button ──────────────────────────────────────────────
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-              child: GestureDetector(
-                onTap: _submit,
-                child: Container(
-                  height: 52,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [kBlue, kBlueDark]),
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [BoxShadow(color: kBlue.withOpacity(.3), blurRadius: 20, offset: const Offset(0, 6))],
-                  ),
-                  child: const Center(
-                    child: Text('POST GIG',
-                      style: TextStyle(color: kTextPri, fontSize: 15, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -261,7 +241,7 @@ class _CreateGigPageState extends State<CreateGigPage> {
   }
 }
 
-// ─── Reusable Widgets ─────────────────────────────────────────────────────────
+// ─── Reusable Widgets 
 
 class _FieldLabel extends StatelessWidget {
   final String text;
