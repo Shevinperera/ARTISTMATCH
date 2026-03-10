@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'gig_post_page.dart';
+// import 'gig_post_page.dart';
 import 'static_nav.dart'; 
 
 void main() {

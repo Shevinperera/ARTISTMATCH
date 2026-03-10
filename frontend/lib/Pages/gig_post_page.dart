@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'gig_apply_page.dart';
 import 'new_gig_form.dart';
-import 'nav_bar.dart'; //
+// import 'nav_bar.dart';
 
 
 class GigPostPage extends StatefulWidget {
@@ -159,7 +160,9 @@ class _GigPostPageState extends State<GigPostPage> {
           children: [
             Text("$price / night", style: const TextStyle(color: Colors.white, fontSize: 16)),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ApplyPage()),);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0091EA),
                 foregroundColor: Colors.white,
