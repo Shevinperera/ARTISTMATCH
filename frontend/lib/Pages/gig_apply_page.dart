@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
 }
 
 // ─── Color palette (matches your gig feed) ───────────────────────────────────
-const kBg         = Color(0xFF0D0D1A);
+const kBg         = Color.fromARGB(255, 0, 0, 0);
 const kCard       = Color(0xFF1A1A2E);
 const kCardDeep   = Color(0xFF16213E);
 const kBorder     = Color(0xFF2A2A3A);
