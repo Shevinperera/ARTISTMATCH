@@ -233,7 +233,26 @@ class _CreateGigPageState extends State<CreateGigPage> {
                 ),
               ),
             ),
-
+                        // ── POST GIG Button 
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+              child: GestureDetector(
+                onTap: _submit,
+                child: Container(
+                  height: 52,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(colors: [kBlue, kBlueDark]),
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [BoxShadow(color: kBlue.withOpacity(.3), blurRadius: 20, offset: const Offset(0, 6))],
+                  ),
+                  child: const Center(
+                    child: Text('POST GIG',
+                      style: TextStyle(color: kTextPri, fontSize: 15, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
