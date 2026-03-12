@@ -65,7 +65,7 @@ class _ApplyPageState extends State<ApplyPage> {
 
   @override
   void dispose() {
-    _nameCtrl.dispose(); _phoneCtrl.dispose(); _rateCtrl.dispose();
+    _nameCtrl.dispose(); _phoneCtrl.dispose(); 
     _coverCtrl.dispose(); _portfolioCtrl.dispose(); _socialCtrl.dispose();
     super.dispose();
   }
@@ -285,29 +285,7 @@ class _ApplyPageState extends State<ApplyPage> {
           selected: _experience,
           onSelect: (v) => setState(() => _experience = v),
         ),
-        _FieldLabel('Your Ask (Rs / night)'),
-        Container(
-          decoration: BoxDecoration(color: kCard, borderRadius: BorderRadius.circular(12), border: Border.all(color: kBorder)),
-          child: Row(
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 14),
-                child: Text('Rs', style: TextStyle(color: kBlue, fontWeight: FontWeight.w700, fontSize: 14)),
-              ),
-              Expanded(
-                child: TextField(
-                  controller: _rateCtrl,
-                  keyboardType: TextInputType.number,
-                  style: const TextStyle(color: kTextPri, fontSize: 14),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+
         const SizedBox(height: 16),
       ],
     );

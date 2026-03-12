@@ -29,7 +29,7 @@ class _GigPostPageState extends State<GigPostPage> {
     },
   ];
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     const Color brandBlue = Color(0xFF0091EA);
 
     return Scaffold(
