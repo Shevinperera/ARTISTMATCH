@@ -254,31 +254,7 @@ class _ApplyPageState extends State<ApplyPage> {
         _AppInput(controller: _nameCtrl, hint: 'e.g. Luna & The Echo'),
         _FieldLabel('Contact Number'),
         _AppInput(controller: _phoneCtrl, hint: '+94 77 000 0000', keyboardType: TextInputType.phone),
-        _FieldLabel('Your Genre(s)'),
-        Wrap(
-          spacing: 8, runSpacing: 8,
-          children: _allGenres.map((g) {
-            final sel = _genres.contains(g);
-            return GestureDetector(
-              onTap: () => setState(() => sel ? _genres.remove(g) : _genres.add(g)),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                decoration: BoxDecoration(
-                  color: sel ? kBlue : kCard,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: sel ? kBlue : kBorder),
-                ),
-                child: Text(g,
-                  style: TextStyle(
-                    color: sel ? kTextPri : kTextSec,
-                    fontSize: 12, fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
+        
         _FieldLabel('Years of Experience'),
         _SegmentPicker(
           options: const ['< 1 yr', '1–3 yrs', '3–5 yrs', '5+ yrs'],
