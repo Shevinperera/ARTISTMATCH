@@ -49,6 +49,54 @@ class _FeedPageState extends State<FeedPage> {
     if (count >= 1000) return '${(count / 1000).toStringAsFixed(0)}k';
     return count.toString();
   }
+
+  void _showPostOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1C1C1E),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(100),
+              ),
+            ),
+            _optionTile(Icons.flag_outlined, 'Report Post', Colors.red),
+            _optionTile(Icons.person_off_outlined, 'Block Artist', Colors.white),
+            _optionTile(Icons.visibility_off_outlined, 'Not Interested', Colors.white),
+            _optionTile(Icons.share_outlined, 'Share Post', Colors.white),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _optionTile(IconData icon, String label, Color color) {
+    return ListTile(
+      leading: Icon(icon, color: color, size: 22),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: color,
+          fontSize: 15,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      onTap: () => Navigator.pop(context),
+    );
+  }
  
 
   @override
