@@ -221,7 +221,48 @@ class _FeedPageState extends State<FeedPage> {
           ),
         ),
 
-        
+        // Bottom content row
+        Positioned(
+          left: 14,
+          right: 14,
+          bottom: 20,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              // Left — username + caption
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      post['username'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w900,
+                        height: 1.40,
+                        letterSpacing: -0.32,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      post['caption'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w300,
+                        height: 1.40,
+                        letterSpacing: -0.22,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+
       ],
     );
   }
