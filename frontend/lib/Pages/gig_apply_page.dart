@@ -52,8 +52,6 @@ class _ApplyPageState extends State<ApplyPage> {
   // Step-1 state
   final _nameCtrl    = TextEditingController();
   final _phoneCtrl   = TextEditingController();
-  final _rateCtrl    = TextEditingController(text: '20000');
-  final List<String> _allGenres  = ['Acoustic','Jazz','Pop','R&B','Rock','Electronic','Hip-Hop','Classical'];
   final Set<String>  _genres     = {'Acoustic'};
   String? _experience;
 

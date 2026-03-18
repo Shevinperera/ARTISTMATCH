@@ -212,3 +212,119 @@ class SignInScreen extends StatelessWidget {
     );
   }
 }
+class AMInput extends StatelessWidget {
+  final TextEditingController controller;
+  final String hint;
+  final bool obscure;
+  const AMInput({super.key, required this.controller, required this.hint, this.obscure = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      obscureText: obscure,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: const Color(0xFF1E1E1E),
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.grey),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+}
+
+class AMBlueBtn extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const AMBlueBtn({super.key, required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF4285F4),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+      ),
+    );
+  }
+}
+
+class AMSocialBtn extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final Color iconColor;
+  final VoidCallback onTap;
+  const AMSocialBtn({super.key, required this.label, required this.icon, required this.iconColor, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: iconColor, size: 24),
+            const SizedBox(width: 12),
+            Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AMDivider extends StatelessWidget {
+  const AMDivider({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return const Row(children: [
+      Expanded(child: Divider(color: Colors.grey, thickness: 1)),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Text("or", style: TextStyle(color: Colors.grey)),
+      ),
+      Expanded(child: Divider(color: Colors.grey, thickness: 1)),
+    ]);
+  }
+}
+
+class AMTerms extends StatelessWidget {
+  const AMTerms({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: const TextSpan(
+        style: TextStyle(color: Colors.grey, fontSize: 12),
+        children: [
+          TextSpan(text: "By clicking continue, you agree to our "),
+          TextSpan(text: "Terms of Service",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          TextSpan(text: " and "),
+          TextSpan(text: "Privacy Policy",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+}

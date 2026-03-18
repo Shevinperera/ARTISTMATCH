@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'chat_screen.dart';
 import 'nav_bar.dart'; 
-import 'gig_post_page.dart'; 
+import 'gig_post_page.dart';
+import 'user_profile_screen.dart'; 
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -18,8 +20,8 @@ final List<Widget> _pages = [
   const GigPostPage(), // Index 0
   const Center(child: Text("Explore - Coming Soon", style: TextStyle(color: Colors.white))), // Index 1
   const Center(child: Text("Add - Coming Soon", style: TextStyle(color: Colors.white))), // Index 2
-  const Center(child: Text("Alerts - Coming Soon", style: TextStyle(color: Colors.white))), // Index 3
-  const Center(child: Text("Profile - Coming Soon", style: TextStyle(color: Colors.white))), // Index 4
+  const ChatScreen(), // Index 3
+  const UserProfileScreen(), // Index 4
 ];
 
   @override
