@@ -9,6 +9,47 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   final PageController _pageController = PageController();
+  final List<Map<String, dynamic>> _posts = [ //dummy data for feed posts
+    {
+      'username': 'Chris Stussy',
+      'caption': 'Yesterday was lit at Berlin!\n#house #minimalhouse',
+      'likes': 20000,
+      'image': 'https://picsum.photos/400/800?random=1',
+      'isFollowing': false,
+      'isLiked': false,
+    },
+    {
+      'username': 'SG Lewis',
+      'caption': 'Studio session with the gang 🎹\n#rnb #producer',
+      'likes': 15400,
+      'image': 'https://picsum.photos/400/800?random=2',
+      'isFollowing': false,
+      'isLiked': false,
+    },
+    {
+      'username': 'Costa',
+      'caption': 'New track out now 🔥\n#indie #newmusic',
+      'likes': 8200,
+      'image': 'https://picsum.photos/400/800?random=3',
+      'isFollowing': false,
+      'isLiked': false,
+    },
+    {
+      'username': 'Misfit',
+      'caption': 'Late night sessions 🌙\n#hiphop #beats',
+      'likes': 31000,
+      'image': 'https://picsum.photos/400/800?random=4',
+      'isFollowing': false,
+      'isLiked': false,
+    },
+  ];
+
+  String _formatCount(int count) {
+    if (count >= 1000000) return '${(count / 1000000).toStringAsFixed(1)}M';
+    if (count >= 1000) return '${(count / 1000).toStringAsFixed(0)}k';
+    return count.toString();
+  }
+ 
 
   @override
   void dispose() {
