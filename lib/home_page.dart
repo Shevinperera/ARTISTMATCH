@@ -112,6 +112,7 @@ class _FeedPageState extends State<FeedPage> {
       body: SafeArea(
         child: Column(
           children: [
+            // ── Top Header Bar ──
             Container(
               height: 50,
               padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -141,10 +142,13 @@ class _FeedPageState extends State<FeedPage> {
                 ],
               ),
             ),
-            const Expanded(
-              child: Center(
-                child: Text('Feed coming soon',
-                    style: TextStyle(color: Colors.white)),
+            // ── Feed ──
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                scrollDirection: Axis.vertical,
+                itemCount: _posts.length,
+                itemBuilder: (context, index) => _buildPost(context, index),
               ),
             ),
           ],
