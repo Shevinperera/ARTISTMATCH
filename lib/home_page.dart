@@ -156,4 +156,73 @@ class _FeedPageState extends State<FeedPage> {
       ),
     );
   }
+
+  Widget _buildPost(BuildContext context, int index) {
+    final post = _posts[index];
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // Full post image
+        Image.network(
+          post['image'],
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => Container(
+            color: const Color(0xFF1A1A1A),
+            child: const Center(
+              child: Icon(Icons.image_outlined,
+                  color: Color(0xFF595959), size: 64),
+            ),
+          ),
+        ),
+
+        // Bottom gradient so text is readable
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          height: 280,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [
+                  Colors.black.withOpacity(0.88),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        // Three dots — top right
+        Positioned(
+          top: 12,
+          right: 12,
+          child: GestureDetector(
+            onTap: () => _showPostOptions(context),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: List.generate(3, (i) => Padding(
+                  padding: EdgeInsets.only(left: i == 0 ? 0 : 3),
+                  child: Container(
+                    width: 4,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                )),
+              ),
+            ),
+          ),
+        ),
+
+        
+      ],
+    );
+  }
 }
