@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'notifications_page.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -134,10 +135,16 @@ class _FeedPageState extends State<FeedPage> {
                     width: 160,
                     fit: BoxFit.contain,
                   ),
-                  const Icon(
-                    Icons.notifications_outlined,
-                    color: Colors.white,
-                    size: 24,
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                    ),
+                    child: const Icon(
+                      Icons.notifications_outlined,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
                 ],
               ),
