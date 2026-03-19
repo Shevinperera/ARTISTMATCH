@@ -301,8 +301,31 @@ class _FeedPageState extends State<FeedPage> {
                     ],
                   ),
                   const SizedBox(height: 10),
-
-                
+                  // Follow button
+                  GestureDetector(
+                    onTap: () => setState(() {
+                      post['isFollowing'] = !post['isFollowing'];
+                    }),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0x3F767680),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        post['isFollowing'] ? 'Following' : 'Follow',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w400,
+                          height: 1.33,
+                          letterSpacing: -0.23,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
