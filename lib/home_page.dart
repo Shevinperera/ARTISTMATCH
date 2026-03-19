@@ -220,7 +220,6 @@ class _FeedPageState extends State<FeedPage> {
             ),
           ),
         ),
-
         // Bottom content row
         Positioned(
           left: 14,
@@ -262,7 +261,53 @@ class _FeedPageState extends State<FeedPage> {
                 ),
               ),
 
+              const SizedBox(width: 12),
 
+              // Right — like count + follow
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // Like button + count
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => setState(() {
+                          post['isLiked'] = !post['isLiked'];
+                          post['likes'] += post['isLiked'] ? 1 : -1;
+                        }),
+                        child: Icon(
+                          post['isLiked']
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: post['isLiked']
+                              ? const Color(0xFFFF383C)
+                              : Colors.white,
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _formatCount(post['likes']),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                          height: 1.40,
+                          letterSpacing: -0.28,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
