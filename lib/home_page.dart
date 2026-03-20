@@ -121,7 +121,7 @@ class _FeedPageState extends State<FeedPage> {
                 color: Colors.black,
                 border: Border(
                   bottom: BorderSide(
-                    color: const Color(0xFFF7F7F7).withOpacity(0.37),
+                    color: const Color(0xFFF7F7F7).withValues(alpha: 0.37),
                     width: 1,
                   ),
                 ),
@@ -135,7 +135,7 @@ class _FeedPageState extends State<FeedPage> {
                     width: 160,
                     fit: BoxFit.contain,
                   ),
-                  GestureDetector(
+                  GestureDetector( //notifications icon---> notifications page
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const NotificationsPage()),
