@@ -141,6 +141,52 @@ class _UploadPageState extends State<UploadPage> {
     ),
   );
 }
+  Widget _buildPreview() {
+  return Stack(
+    fit: StackFit.expand,
+    children: [
+      Image.file(
+        File(_selectedFile!.path),
+        fit: BoxFit.contain,
+      ),
+      if (_isVideo)
+        const Center(
+          child: Icon(
+            Icons.play_circle_outline,
+            color: Colors.white,
+            size: 64,
+          ),
+        ),
+      Positioned(
+        bottom: 20,
+        right: 20,
+        child: GestureDetector(
+          onTap: _openGallery,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 0.5,
+              ),
+            ),
+            child: const Text(
+              'Change',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,20 +222,29 @@ class _UploadPageState extends State<UploadPage> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(
-                    'Next',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.3),
-                      fontSize: 16,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
+                  GestureDetector( //next button only enabled if a file is selected
+                    onTap: _selectedFile == null ? null : () {
+                      // TODO: navigate to post details page
+                    },
+                    child: Text(
+                      'Next',
+                      style: TextStyle(
+                        color: _selectedFile == null
+                            ? Colors.white.withOpacity(0.3)
+                            : const Color(0xFF0088FF),
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
             Expanded(
-              child: _buildEmptyState()
+              child: _selectedFile == null
+                  ? _buildEmptyState()
+                  : _buildPreview(),
             ),
           ],
         ),
