@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'nav_bar.dart';
 import 'artist_search.dart';
-import 'notifications_page.dart';
+import 'home_page.dart';
+//import 'notifications_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -14,10 +15,10 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const Center(child: Text("Home - Coming Soon", style: TextStyle(color: Colors.white))),   // Index 0 - Home
+    const FeedPage(),   // Index 0 - Home
     const ArtistSearchPage(),   // Index 1 - Explore
     const Center(child: Text("Add - Coming Soon", style: TextStyle(color: Colors.white))),    // Index 2 - Add
-    const NotificationsPage(),  // Index 3 - Notifications
+    //const NotificationsPage(),  // Index 3 - Notifications
     const Center(child: Text("Profile - Coming Soon", style: TextStyle(color: Colors.white))), // Index 4 - Profile
   ];
 

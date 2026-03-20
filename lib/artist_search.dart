@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'artist_search_filters.dart';
-import 'notifications_page.dart';
+//import 'notifications_page.dart';
 // Artist Search update test
 class ArtistSearchPage extends StatefulWidget {
   const ArtistSearchPage({super.key});
