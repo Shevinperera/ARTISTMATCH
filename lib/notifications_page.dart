@@ -65,6 +65,11 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ),
               child: Row(
                 children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(Icons.chevron_left, color: Colors.white, size: 28),
+                  ),
+                  const SizedBox(width: 10),
                   const Text(
                     'Notifications',
                     style: TextStyle(
