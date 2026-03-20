@@ -96,8 +96,51 @@ class _UploadPageState extends State<UploadPage> {
       ),
     ),
   );
+  }
+  Widget _buildEmptyState() {
+  return Center(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.add_photo_alternate_outlined,
+          color: Colors.white.withOpacity(0.3),
+          size: 64,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'Select a photo or video',
+          style: TextStyle(
+            color: Colors.white.withOpacity(0.5),
+            fontSize: 16,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        const SizedBox(height: 24),
+        GestureDetector(
+          onTap: _openGallery,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0088FF),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text(
+              'Open Gallery',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,11 +188,8 @@ class _UploadPageState extends State<UploadPage> {
                 ],
               ),
             ),
-            const Expanded(
-              child: Center(
-                child: Text('Upload coming soon',
-                    style: TextStyle(color: Colors.white)),
-              ),
+            Expanded(
+              child: _buildEmptyState()
             ),
           ],
         ),
@@ -157,4 +197,3 @@ class _UploadPageState extends State<UploadPage> {
     );
   }
 }
- 
