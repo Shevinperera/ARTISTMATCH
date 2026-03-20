@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'notifications_page.dart';
+import 'upload_page.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -129,7 +130,13 @@ class _FeedPageState extends State<FeedPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(Icons.add, color: Colors.white, size: 24),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const UploadPage()),
+                    ),
+                    child:const Icon(Icons.add, color: Colors.white, size: 24),
+                  ),
                   Image.asset(
                     'assets/AM_logo2.png',
                     width: 160,
