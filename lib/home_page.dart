@@ -130,7 +130,7 @@ class _FeedPageState extends State<FeedPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  GestureDetector(
+                  GestureDetector( //home icon---> feed page
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const UploadPage()),
