@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'notifications_page.dart';
+import 'notifications_page.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
