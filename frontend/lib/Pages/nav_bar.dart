@@ -34,9 +34,21 @@ class CustomNavBar extends StatelessWidget {
           activeIcon: Icon(Icons.explore),
           label: "",
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined, size: 30), label: ""),
-        BottomNavigationBarItem(icon: Icon(Icons.chat), label: ""),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.add_box_outlined, size: 30),
+          activeIcon: Icon(Icons.add_box, size: 30),
+          label: "",
+        ),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.notifications_outlined),
+          activeIcon: Icon(Icons.notifications),
+          label: "",
+        ),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
+          label: "",
+        ),
       ],
     );
   }
