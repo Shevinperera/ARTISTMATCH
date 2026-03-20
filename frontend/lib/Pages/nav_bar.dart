@@ -24,8 +24,16 @@ class CustomNavBar extends StatelessWidget {
       onTap: onTap, // Passes the tap back to MainScreen
       
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-        BottomNavigationBarItem(icon: Icon(Icons.explore), label: ""),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home),
+          label: "",
+        ),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.explore_outlined),
+          activeIcon: Icon(Icons.explore),
+          label: "",
+        ),
         BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined, size: 30), label: ""),
         BottomNavigationBarItem(icon: Icon(Icons.chat), label: ""),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
