@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'chat_screen.dart';
-import 'nav_bar.dart'; 
+import 'nav_bar.dart';
 import 'gig_post_page.dart';
-import 'user_profile_screen.dart'; 
+import 'user_profile_screen.dart';
+import 'messages_screen.dart'; // ← inbox (tap a chat to open ChatScreen)
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -14,31 +14,27 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  // These are the "pictures" that will swap inside the frame
- // HOW IT LOOKS RIGHT NOW
-final List<Widget> _pages = [
-  const GigPostPage(), // Index 0
-  const Center(child: Text("Explore - Coming Soon", style: TextStyle(color: Colors.white))), // Index 1
-  const Center(child: Text("Add - Coming Soon", style: TextStyle(color: Colors.white))), // Index 2
-  const ChatScreen(), // Index 3
-  const UserProfileScreen(), // Index 4
-];
+  final List<Widget> _pages = [
+    const GigPostPage(),                                                                          // 0 Home
+    const Center(child: Text("Explore - Coming Soon", style: TextStyle(color: Colors.white))),    // 1 Explore
+    const Center(child: Text("Add - Coming Soon",     style: TextStyle(color: Colors.white))),    // 2 Add
+    const MessagesScreen(),                                                                       // 3 Messages
+    const UserProfileScreen(),                                                                    // 4 Profile
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      // IndexedStack just changes which page in the list is visible
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,
       ),
-      // The Nav Bar stays permanently fixed at the bottom
       bottomNavigationBar: CustomNavBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index; // Updates the active icon and page
+            _selectedIndex = index;
           });
         },
       ),
