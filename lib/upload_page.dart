@@ -10,8 +10,93 @@ class UploadPage extends StatefulWidget {
 }
 
 class _UploadPageState extends State<UploadPage> {
+  final ImagePicker _picker = ImagePicker();
   XFile? _selectedFile;
   bool _isVideo = false;
+
+  @override
+  void initState() {
+    super.initState();
+    //automatically open gallery when page loads
+    WidgetsBinding.instance.addPostFrameCallback((_) => _openGallery());
+  }
+
+  Future<void> _openGallery() async {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: const Color(0xFF1C1C1E),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (_) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.only(bottom: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.image_outlined, color: Colors.white, size: 22),
+            title: const Text(
+              'Choose Photo',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            onTap: () async {
+              Navigator.pop(context);
+              final file = await _picker.pickImage(
+                source: ImageSource.gallery,
+                imageQuality: 90,
+              );
+              if (file != null) {
+                setState(() {
+                  _selectedFile = file;
+                  _isVideo = false;
+                });
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.videocam_outlined, color: Colors.white, size: 22),
+            title: const Text(
+              'Choose Video',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            onTap: () async {
+              Navigator.pop(context);
+              final file = await _picker.pickVideo(
+                source: ImageSource.gallery,
+              );
+              if (file != null) {
+                setState(() {
+                  _selectedFile = file;
+                  _isVideo = true;
+                });
+              }
+            },
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
