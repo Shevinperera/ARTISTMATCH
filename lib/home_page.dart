@@ -84,6 +84,7 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
+  
   Widget _optionTile(IconData icon, String label, Color color) {
     return ListTile(
       leading: Icon(icon, color: color, size: 22),

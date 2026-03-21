@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 import 'dart:io';
 
 class UploadPage extends StatefulWidget {
@@ -13,12 +14,19 @@ class _UploadPageState extends State<UploadPage> {
   final ImagePicker _picker = ImagePicker();
   XFile? _selectedFile;
   bool _isVideo = false;
+  VideoPlayerController? _videoController;
 
   @override
   void initState() {
     super.initState();
     //automatically open gallery when page loads
     WidgetsBinding.instance.addPostFrameCallback((_) => _openGallery());
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    super.dispose();
   }
 
   Future<void> _openGallery() async {
@@ -88,6 +96,7 @@ class _UploadPageState extends State<UploadPage> {
                   _selectedFile = file;
                   _isVideo = true;
                 });
+                await _initVideo(file.path);
               }
             },
           ),
@@ -96,6 +105,11 @@ class _UploadPageState extends State<UploadPage> {
       ),
     ),
   );
+  }
+  Future<void> _initVideo(String path) async {
+    _videoController = VideoPlayerController.file(File(path));
+    await _videoController!.initialize();
+    setState(() {});
   }
   Widget _buildEmptyState() {
   return Center(
@@ -145,17 +159,15 @@ class _UploadPageState extends State<UploadPage> {
   return Stack(
     fit: StackFit.expand,
     children: [
-      Image.file(
-        File(_selectedFile!.path),
-        fit: BoxFit.contain,
-      ),
-      if (_isVideo)
-        const Center(
-          child: Icon(
-            Icons.play_circle_outline,
-            color: Colors.white,
-            size: 64,
-          ),
+      if (_isVideo && _videoController != null && _videoController!.value.isInitialized)
+        AspectRatio(
+          aspectRatio: _videoController!.value.aspectRatio,
+          child: VideoPlayer(_videoController!),
+        )
+      else if (!_isVideo)
+        Image.file(
+          File(_selectedFile!.path),
+          fit: BoxFit.contain,
         ),
       Positioned(
         bottom: 20,
