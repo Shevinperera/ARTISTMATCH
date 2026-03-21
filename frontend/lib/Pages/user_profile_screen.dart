@@ -255,21 +255,10 @@ class _HeroBanner extends StatelessWidget {
             child: Center(
               child: Column(
                 children: [
-                  Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AMColors.accent, width: 2.5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AMColors.accent.withOpacity(0.35),
-                          blurRadius: 20,
-                          spreadRadius: 2,
-                        )
-                      ],
-                    ),
-                    child: ClipOval(
+                  ClipOval(
+                    child: SizedBox(
+                      width: 90,
+                      height: 90,
                       child: _NetworkImage(url: profile.avatarUrl, fit: BoxFit.cover),
                     ),
                   ),

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'Pages/login_page.dart'; 
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 2. Now it is safe to boot up the app!
   runApp(const MainApp());
 }
 
