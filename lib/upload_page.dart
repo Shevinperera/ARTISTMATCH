@@ -237,7 +237,15 @@ class _UploadPageState extends State<UploadPage> {
                   ),
                   GestureDetector( //next button only enabled if a file is selected
                     onTap: _selectedFile == null ? null : () {
-                      // TODO: navigate to post details page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => PostDetailsPage(
+                            filePath: _selectedFile!.path,
+                            isVideo: _isVideo,
+                          ),
+                        ),
+                      );
                     },
                     child: Text(
                       'Next',
