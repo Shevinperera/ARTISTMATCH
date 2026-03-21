@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'nav_bar.dart';
 import 'artist_search.dart';
-import 'notifications_page.dart';
+//import 'notifications_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
     const Center(child: Text("Home - Coming Soon", style: TextStyle(color: Colors.white))),   // Index 0 - Home
     const ArtistSearchPage(),   // Index 1 - Explore
     const Center(child: Text("Add - Coming Soon", style: TextStyle(color: Colors.white))),    // Index 2 - Add
-    const NotificationsPage(),  // Index 3 - Notifications
+    //const NotificationsPage(),  // Index 3 - Notifications
     const Center(child: Text("Profile - Coming Soon", style: TextStyle(color: Colors.white))), // Index 4 - Profile
   ];
 
