@@ -12,6 +12,13 @@ class ArtistSearchPage extends StatefulWidget {
 class _ArtistSearchPageState extends State<ArtistSearchPage> {
   int _currentBannerIndex = 0;
   int _selectedNavIndex = 0;
+  List<String> _selectedRoles = [];
+  List<String> _selectedGenres = [];
+  List<String> _selectedTrackTypes = [];
+  String? _selectedGender;
+  List<String> _selectedLanguages = [];
+  String? _selectedExp;
+  String? _selectedLocation;
 
   final List<Map<String, String>> _suggestedArtists = [
     {'name': 'Costa', 'image': 'https://piscum.photos/76x76'},
@@ -95,19 +102,38 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => DraggableScrollableSheet(
-                          initialChildSize: 0.85,
-                          minChildSize: 0.5,
-                          maxChildSize: 0.95,
-                          builder: (_, controller) => const SearchFiltersPage(),
-                        ),
-                      );
-                    },
+                      onTap: () async {
+                        final result = await showModalBottomSheet<Map<String, dynamic>>(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => DraggableScrollableSheet(
+                            initialChildSize: 0.85,
+                            minChildSize: 0.5,
+                            maxChildSize: 0.95,
+                            builder: (_, controller) => SearchFiltersPage(
+                              initialRoles: _selectedRoles,
+                              initialGenres: _selectedGenres,
+                              initialTrackTypes: _selectedTrackTypes,
+                              initialGender: _selectedGender,
+                              initialLanguages: _selectedLanguages,
+                              initialExp: _selectedExp,
+                              initialLocation: _selectedLocation,
+                            ),
+                          ),
+                        );
+                        if (result != null) {
+                          setState(() {
+                            _selectedRoles = result['roles'] ?? [];
+                            _selectedGenres = result['genres'] ?? [];
+                            _selectedTrackTypes = result['trackTypes'] ?? [];
+                            _selectedGender = result['gender'];
+                            _selectedLanguages = result['languages'] ?? [];
+                            _selectedExp = result['exp'];
+                            _selectedLocation = result['location'];
+                          });
+                        }
+                      },
                     child: Container(
                       width: 40,
                       height: 40,
@@ -117,7 +143,30 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Icon(Icons.tune, color: Color(0xFFF7F7F7), size: 20),
+                      child: Stack(
+                        children: [
+                          const Icon(Icons.tune, color: Color(0xFFF7F7F7), size: 20),
+                          if (_selectedRoles.isNotEmpty ||
+                              _selectedGenres.isNotEmpty ||
+                              _selectedTrackTypes.isNotEmpty ||
+                              _selectedGender != null ||
+                              _selectedLanguages.isNotEmpty ||
+                              _selectedExp != null ||
+                              _selectedLocation != null)
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF0088FF),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

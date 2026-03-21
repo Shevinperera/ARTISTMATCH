@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
 
 class SearchFiltersPage extends StatefulWidget {
-  const SearchFiltersPage({super.key});
+  final List<String> initialRoles;
+  final List<String> initialGenres;
+  final List<String> initialTrackTypes;
+  final String? initialGender;
+  final List<String> initialLanguages;
+  final String? initialExp;
+  final String? initialLocation;
 
+  const SearchFiltersPage({
+    super.key,
+    this.initialRoles = const [],
+    this.initialGenres = const [],
+    this.initialTrackTypes = const [],
+    this.initialGender,
+    this.initialLanguages = const [],
+    this.initialExp,
+    this.initialLocation,
+  });
   @override
   State<SearchFiltersPage> createState() => _SearchFiltersPageState();
 }
@@ -16,6 +32,17 @@ class _SearchFiltersPageState extends State<SearchFiltersPage> {
   String? _selectedExp;
   String? _selectedLocation;
 
+  @override
+  void initState() {
+    super.initState();
+    _selectedRoles = List.from(widget.initialRoles);
+    _selectedGenres = List.from(widget.initialGenres);
+    _selectedTrackTypes = List.from(widget.initialTrackTypes);
+    _selectedGender = widget.initialGender;
+    _selectedLanguages = List.from(widget.initialLanguages);
+    _selectedExp = widget.initialExp;
+    _selectedLocation = widget.initialLocation;
+  }
   final List<String> _roles = ['Producer', 'Songwriter', 'Vocalist', 'DJ', 'Mixing Engineer', 'Mastering Engineer', 'Composer', 'Instrumentalist', 'Recording Engineer', 'Other'];
   final List<String> _genres = ['Hip Hop', 'House', 'R&B', 'Pop', 'Rock', 'Electronic', 'Jazz', 'Reggae', 'Afrobeats', 'Latin', 'K-Pop', 'Country', 'Amapiano', 'Techno', 'Indie', 'Phonk', 'Metal', 'Dancehall', 'Ambient', 'Drum and Bass'];
   final List<String> _trackTypes = ['Single', 'EP', 'Album'];
@@ -142,7 +169,15 @@ class _SearchFiltersPageState extends State<SearchFiltersPage> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => Navigator.pop(context, {
+                        'roles': _selectedRoles,
+                        'genres': _selectedGenres,
+                        'trackTypes': _selectedTrackTypes,
+                        'gender': _selectedGender,
+                        'languages': _selectedLanguages,
+                        'exp': _selectedExp,
+                        'location': _selectedLocation,
+                      }),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
