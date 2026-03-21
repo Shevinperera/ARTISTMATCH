@@ -65,12 +65,45 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                 ],
               ),
             ),
-            const Expanded(
-              child: Center(
-                child: Text('Preview coming soon',
-                    style: TextStyle(color: Colors.white)),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Preview',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: widget.isVideo
+                          ? Container(
+                              height: 300,
+                              color: const Color(0xFF2A2A2A),
+                              child: const Center(
+                                child: Icon(Icons.play_circle_outline,
+                                    color: Colors.white, size: 64),
+                              ),
+                            )
+                          : Image.file(
+                              File(widget.filePath),
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
+            
+            
           ],
         ),
       ),
