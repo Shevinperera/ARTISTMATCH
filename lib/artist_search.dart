@@ -19,6 +19,9 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
   List<String> _selectedLanguages = [];
   String? _selectedExp;
   String? _selectedLocation;
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+  String _searchQuery = '';
 
   final List<Map<String, String>> _suggestedArtists = [
     {'name': 'Costa', 'image': 'https://piscum.photos/76x76'},
@@ -47,6 +50,12 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
       'image': 'https://piscum.photos/148x148',
     },
   ];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
