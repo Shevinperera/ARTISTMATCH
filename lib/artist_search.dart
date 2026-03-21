@@ -102,50 +102,55 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
-                      onTap: () async {
-                        final result = await showModalBottomSheet<Map<String, dynamic>>(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => DraggableScrollableSheet(
-                            initialChildSize: 0.85,
-                            minChildSize: 0.5,
-                            maxChildSize: 0.95,
-                            builder: (_, controller) => SearchFiltersPage(
-                              initialRoles: _selectedRoles,
-                              initialGenres: _selectedGenres,
-                              initialTrackTypes: _selectedTrackTypes,
-                              initialGender: _selectedGender,
-                              initialLanguages: _selectedLanguages,
-                              initialExp: _selectedExp,
-                              initialLocation: _selectedLocation,
-                            ),
+                    onTap: () async {
+                      final result = await showModalBottomSheet<Map<String, dynamic>>(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => DraggableScrollableSheet(
+                          initialChildSize: 0.85,
+                          minChildSize: 0.5,
+                          maxChildSize: 0.95,
+                          builder: (_, controller) => SearchFiltersPage(
+                            initialRoles: _selectedRoles,
+                            initialGenres: _selectedGenres,
+                            initialTrackTypes: _selectedTrackTypes,
+                            initialGender: _selectedGender,
+                            initialLanguages: _selectedLanguages,
+                            initialExp: _selectedExp,
+                            initialLocation: _selectedLocation,
                           ),
-                        );
-                        if (result != null) {
-                          setState(() {
-                            _selectedRoles = result['roles'] ?? [];
-                            _selectedGenres = result['genres'] ?? [];
-                            _selectedTrackTypes = result['trackTypes'] ?? [];
-                            _selectedGender = result['gender'];
-                            _selectedLanguages = result['languages'] ?? [];
-                            _selectedExp = result['exp'];
-                            _selectedLocation = result['location'];
-                          });
-                        }
-                      },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFF595959),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ),
+                      );
+                      if (result != null) {
+                        setState(() {
+                          _selectedRoles = result['roles'] ?? [];
+                          _selectedGenres = result['genres'] ?? [];
+                          _selectedTrackTypes = result['trackTypes'] ?? [];
+                          _selectedGender = result['gender'];
+                          _selectedLanguages = result['languages'] ?? [];
+                          _selectedExp = result['exp'];
+                          _selectedLocation = result['location'];
+                        });
+                      }
+                    },
+                    child: SizedBox(
+                      width: 46,
+                      height: 46,
                       child: Stack(
+                        clipBehavior: Clip.none,
                         children: [
-                          const Icon(Icons.tune, color: Color(0xFFF7F7F7), size: 20),
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFF595959),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Icon(Icons.tune, color: Color(0xFFF7F7F7), size: 20),
+                          ),
                           if (_selectedRoles.isNotEmpty ||
                               _selectedGenres.isNotEmpty ||
                               _selectedTrackTypes.isNotEmpty ||
@@ -154,8 +159,8 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                               _selectedExp != null ||
                               _selectedLocation != null)
                             Positioned(
-                              right: 0,
-                              top: 0,
+                              right: -2,
+                              top: -2,
                               child: Container(
                                 width: 8,
                                 height: 8,
@@ -351,7 +356,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
 
   Widget _buildSuggestedArtists() {
     return SizedBox(
-      height: 120,
+      height: 124,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
