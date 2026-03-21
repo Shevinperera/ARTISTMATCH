@@ -295,13 +295,8 @@ class _StatsRow extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 20, 16, 0),
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: AMColors.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AMColors.border),
-      ),
+
       child: Row(
         children: [
           _StatCell(value: fmt(profile.followers), label: 'Followers'),
