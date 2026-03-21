@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'artist_search_filters.dart';
-import 'notifications_page.dart';
+//import 'notifications_page.dart';
 // Artist Search update test
 class ArtistSearchPage extends StatefulWidget {
   const ArtistSearchPage({super.key});
@@ -56,25 +56,37 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                   Expanded(
                     child: Container(
                       height: 40,
-                      padding: const EdgeInsets.only(top: 8, left: 12, right: 16, bottom: 8),
+                      padding: const EdgeInsets.only(left: 12, right: 16),
                       decoration: ShapeDecoration(
                         color: const Color(0xFF595959),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.search, color: Color(0xFFF7F7F7), size: 20),
-                          SizedBox(width: 12),
-                          Text(
-                            'ArtistSearch',
-                            style: TextStyle(
-                              color: Color(0xFFF7F7F7),
-                              fontSize: 16,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              height: 1.50,
+                          const Icon(Icons.search, color: Color(0xFFF7F7F7), size: 20),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: TextField(
+                              style: const TextStyle(
+                                color: Color(0xFFF7F7F7),
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              decoration: const InputDecoration(
+                                hintText: 'ArtistSearch',
+                                hintStyle: TextStyle(
+                                  color: Color(0xFFF7F7F7),
+                                  fontSize: 16,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                border: InputBorder.none,
+                                isDense: true,
+                                contentPadding: EdgeInsets.zero,
+                              ),
                             ),
                           ),
                         ],
