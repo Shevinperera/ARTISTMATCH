@@ -23,14 +23,14 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
   bool _isSearching = false;
   String _searchQuery = '';
 
-  final List<Map<String, String>> _suggestedArtists = [
+  final List<Map<String, String>> _suggestedArtists = [ // temp pictures 
     {'name': 'Costa', 'image': 'https://piscum.photos/76x76'},
     {'name': 'Misfit', 'image': 'https://piscum.photos/76x76'},
     {'name': 'SG Lewis', 'image': 'https://piscum.photos/76x76'},
     {'name': 'Chase Atlantic', 'image': 'https://piscum.photos/76x76'},
   ];
 
-  final List<Map<String, String>> _newReleases = [
+  final List<Map<String, String>> _newReleases = [ // dummy data for search page 
     {
       'title': '3005',
       'artist': 'Misfit',
@@ -48,6 +48,40 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
       'artist': 'soscamo',
       'time': 'Last Year',
       'image': 'https://piscum.photos/148x148',
+    },
+  ];
+  final List<Map<String, dynamic>> _allArtists = [ // dummy data for search results
+    {
+      'name': 'SG Lewis',
+      'roles': 'Producer, DJ',
+      'followers': '479',
+      'genres': ['#MinimalHouse', '#UKG'],
+      'image': 'https://picsum.photos/52/52?random=10',
+      'relevant': true,
+    },
+    {
+      'name': 'FISHER',
+      'roles': 'DJ, Producer',
+      'followers': '7,839',
+      'genres': ['#TechHouse', '#DeepHouse'],
+      'image': 'https://picsum.photos/52/52?random=11',
+      'relevant': false,
+    },
+    {
+      'name': 'Costa',
+      'roles': 'Musician',
+      'followers': '1,200',
+      'genres': ['#Indie', '#Pop'],
+      'image': 'https://picsum.photos/52/52?random=12',
+      'relevant': false,
+    },
+    {
+      'name': 'Misfit',
+      'roles': 'Producer',
+      'followers': '890',
+      'genres': ['#HipHop', '#Beats'],
+      'image': 'https://picsum.photos/52/52?random=13',
+      'relevant': false,
     },
   ];
 
