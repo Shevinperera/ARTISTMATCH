@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'new_gig_form.dart';
+import 'nav_bar.dart'; //
 
 
 class GigPostPage extends StatefulWidget {
@@ -126,22 +127,11 @@ class _GigPostPageState extends State<GigPostPage> {
 ), // <--- 7. Closes the SafeArea
 
 // --- BOTTOM NAVIGATION BAR ---
-bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined, size: 30), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
-        ],
-      ),
-    );
+bottomNavigationBar:
+      
+        
+        const CustomNavBar(currentIndex: 0), // 0 means highlight the Home icon
+      );    
   }
 
   // --- HELPER: GIG CARD ---
