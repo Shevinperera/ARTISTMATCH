@@ -119,6 +119,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: TextField(
+                              controller: _searchController,
                               style: const TextStyle(
                                 color: Color(0xFFF7F7F7),
                                 fontSize: 16,
@@ -137,6 +138,12 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                                 isDense: true,
                                 contentPadding: EdgeInsets.zero,
                               ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _searchQuery = value;
+                                  _isSearching = value.isNotEmpty;
+                                });
+                              },
                             ),
                           ),
                         ],
