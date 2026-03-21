@@ -355,13 +355,13 @@ class _IdentityStrip extends StatelessWidget {
               (r) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AMColors.accentDim,
+                  color: Colors.black,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AMColors.accent.withOpacity(0.5)),
+                  border: Border.all(color: const Color(0xFF333333)),
                 ),
                 child: Text(r,
                     style: const TextStyle(
-                        color: AMColors.accent,
+                        color: Colors.white,
                         fontSize: 11,
                         fontWeight: FontWeight.w600)),
               ),
