@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'gig_post_page.dart';
-import 'static_nav.dart'; 
-
-void main() {
-  runApp(const ArtistMatchApp());
-}
+import 'static_nav.dart';
 
 class ArtistMatchApp extends StatelessWidget {
   const ArtistMatchApp({super.key});
