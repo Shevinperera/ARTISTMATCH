@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
+import 'upload_preview_page.dart';
 
 class UploadPage extends StatefulWidget {
   const UploadPage({super.key});
