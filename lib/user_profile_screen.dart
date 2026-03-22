@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'login_page.dart';
-import 'nav_bar.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final String token;
@@ -17,167 +15,143 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  int _currentIndex = 4;
-
-  void _onNavTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
-  void _logout() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Logout"),
-        content: const Text("Are you sure you want to logout?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("Logout"),
-          ),
-        ],
-      ),
-    );
-  }
+  bool _isFollowing = false;
 
   @override
   Widget build(BuildContext context) {
     final name = widget.userData['name'] ?? 'No Name';
-    final email = widget.userData['email'] ?? 'No Email';
+    final image = widget.userData['image'] ?? 'https://picsum.photos/76/76?random=20';
 
     return Scaffold(
       backgroundColor: Colors.black,
-
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        elevation: 0,
-      ),
-
       body: SafeArea(
-        child: Column(
-          children: [
-            /// 🔥 BANNER
-            Stack(
-              children: [
-                Image.network(
-                  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                  height: 200,
-                  color: Colors.black.withOpacity(0.5),
-                ),
-                const Positioned.fill(
-                  child: Center(
-                    child: Text(
-                      "User Profile",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                      ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                width: double.infinity,
+                height: 195,
+                clipBehavior: Clip.antiAlias,
+                decoration: ShapeDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      widget.userData['banner'] ??
+                          'https://picsum.photos/354/195?random=99',
                     ),
+                    fit: BoxFit.cover,
                   ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  shadows: const [
+                    BoxShadow(
+                      color: Color(0x3F000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-
-            /// CONTENT
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
+                child: Stack(
                   children: [
-                    const SizedBox(height: 15),
-
-                    /// AVATAR
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200',
+                    // Back button
+                    Positioned(
+                      left: 6,
+                      top: 8,
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.4),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.chevron_left,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ),
                       ),
                     ),
-
-                    const SizedBox(height: 10),
-
-                    /// NAME
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                    // Three dots
+                    Positioned(
+                      right: 6,
+                      top: 8,
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            children: List.generate(
+                              3,
+                              (i) => Container(
+                                width: 4,
+                                height: 4,
+                                margin: EdgeInsets.only(left: i == 0 ? 0 : 3),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-
-                    const SizedBox(height: 5),
-
-                    /// TAGLINE
-                    const Text(
-                      "Music Lover 🎧",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    /// ROLE BADGE
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.blue,
-                      child: const Text(
-                        "USER",
-                        style: TextStyle(color: Colors.white),
+                    // Avatar + name
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 24,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 76,
+                            height: 76,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(image),
+                                fit: BoxFit.cover,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(38),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            name,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color(0xFFF7F7F7),
+                              fontSize: 14,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500,
+                              height: 1.40,
+                              letterSpacing: 0.14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-
-                    const SizedBox(height: 25),
-
-                    /// USER INFO
-                    _info("Email", email),
-
-                    const SizedBox(height: 30),
+                    // Stats placeholder
+                    const Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 8,
+                      child: SizedBox(height: 30),
+                    ),
                   ],
                 ),
               ),
-            ),
-
-            /// LOGOUT BUTTON
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _logout,
-                  child: const Text("Logout"),
-                ),
-              ),
-            ),
-          ],
+              const SizedBox(height: 80),
+            ],
+          ),
         ),
-      ),
-
-      /// 🔥 NAVBAR
-      bottomNavigationBar: CustomNavBar(
-        currentIndex: _currentIndex,
-        onTap: _onNavTap,
-      ),
-    );
-  }
-
-  Widget _info(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Text(
-        "$label: ${value ?? 'N/A'}",
-        style: const TextStyle(color: Colors.white),
       ),
     );
   }
