@@ -21,6 +21,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     final name = widget.userData['name'] ?? 'No Name';
     final image = widget.userData['image'] ?? 'https://picsum.photos/76/76?random=20';
+    final followers = widget.userData['followers'] ?? '2,018';
+    final following = widget.userData['following'] ?? '2,085';
+    final posts = widget.userData['posts'] ?? '3';
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -139,11 +142,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                     // Stats placeholder
-                    const Positioned(
+                    Positioned(
                       left: 0,
                       right: 0,
                       bottom: 8,
-                      child: SizedBox(height: 30),
+                      child: Row(
+                        children: [
+                          _statItem(followers, 'followers'),
+                          _statItem(following, 'following'),
+                          _statItem(posts, 'posts'),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -155,4 +164,35 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
     );
   }
+
+  Widget _statItem(String value, String label) {
+  return Expanded(
+    child: Column(
+      children: [
+        Text(
+          value,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w700,
+            height: 1.50,
+          ),
+        ),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+            height: 1.50,
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }
