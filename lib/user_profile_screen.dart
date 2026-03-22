@@ -142,7 +142,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       child: GestureDetector(
                         onTap: _showOptions,
                         child: Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(16),
                           child: Row(
                             children: List.generate(
                               3,
@@ -329,15 +329,30 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        _postThumb('https://picsum.photos/127/121?random=30'),
-                        const SizedBox(width: 4),
-                        _postThumb('https://picsum.photos/127/121?random=31'),
-                        const SizedBox(width: 4),
-                        _postThumb('https://picsum.photos/127/121?random=32'),
-                      ],
-                    ),
+                    (widget.userData['posts'] == null || widget.userData['posts'] == '0')
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 24),
+                              child: Text(
+                                'No posts yet',
+                                style: TextStyle(
+                                  color: Color(0xFF595959),
+                                  fontSize: 14,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Row(
+                            children: [
+                              _postThumb('https://picsum.photos/127/121?random=30'),
+                              const SizedBox(width: 4),
+                              _postThumb('https://picsum.photos/127/121?random=31'),
+                              const SizedBox(width: 4),
+                              _postThumb('https://picsum.photos/127/121?random=32'),
+                            ],
+                          ),
                   ],
                 ),
               ),
