@@ -20,6 +20,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final ImagePicker _picker = ImagePicker();
   String? _newBannerPath;
   String? _newProfilePicPath;
+  List<String> _selectedRoles = [];
+  List<String> _selectedGenres = [];
+
+  final List<String> _roles = ['Producer', 'Songwriter', 'Vocalist', 'DJ', 'Mixing Engineer', 'Mastering Engineer', 'Composer', 'Instrumentalist', 'Recording Engineer', 'Other'];
+  final List<String> _genres = ['Hip Hop', 'House', 'R&B', 'Pop', 'Rock', 'Electronic', 'Jazz', 'Reggae', 'Afrobeats', 'Latin', 'K-Pop', 'Country', 'Amapiano', 'Techno', 'Indie', 'Phonk', 'Metal', 'Dancehall', 'Ambient', 'Drum and Bass'];
 
   @override
   void initState() {
@@ -28,6 +33,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         text: widget.userData['name'] ?? '');
     _bioController = TextEditingController(
         text: widget.userData['bio'] ?? '');
+    _selectedRoles = List<String>.from(widget.userData['selectedRoles'] ?? []);
+    _selectedGenres = List<String>.from(widget.userData['selectedGenres'] ?? []);
   }
 
   @override
@@ -91,6 +98,49 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
   }
+  Widget _buildChips(List<String> options, List<String> selected,
+      ValueChanged<List<String>> onChanged) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: options.map((option) {
+        final isSelected = selected.contains(option);
+        return GestureDetector(
+          onTap: () {
+            final updated = List<String>.from(selected);
+            if (isSelected) {
+              updated.remove(option);
+            } else {
+              updated.add(option);
+            }
+            onChanged(updated);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: ShapeDecoration(
+              color: isSelected ? Colors.white : Colors.transparent,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  width: 1,
+                  color: isSelected ? Colors.white : const Color(0xFF595959),
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: Text(
+              option,
+              style: TextStyle(
+                color: isSelected ? Colors.black : const Color(0xFFF2F2F2),
+                fontSize: 13,
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -234,6 +284,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     // Bio
                     _buildLabel('Bio'),
                     _buildTextField(_bioController, 'Write something about yourself', maxLines: 3),
+                    const SizedBox(height: 16),
+                    // Roles
+                    _buildLabel('Artist Roles'),
+                    _buildChips(_roles, _selectedRoles, (val) => setState(() => _selectedRoles = val)),
+                    const SizedBox(height: 16),
+                    // Genres
+                    _buildLabel('Genres'),
+                    _buildChips(_genres, _selectedGenres, (val) => setState(() => _selectedGenres = val)),
                     const SizedBox(height: 16),
                   ],
                 ),
