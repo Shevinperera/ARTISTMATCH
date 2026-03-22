@@ -274,6 +274,169 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
     );
   }
 
+  Widget _buildSearchResults() {
+    final query = _searchQuery.toLowerCase();
+    final relevant = _allArtists
+        .where((a) =>
+            a['name'].toString().toLowerCase().contains(query) &&
+            a['relevant'] == true)
+        .toList();
+    final related = _allArtists
+        .where((a) =>
+            a['name'].toString().toLowerCase().contains(query) &&
+            a['relevant'] == false)
+        .toList();
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      children: [
+        if (relevant.isNotEmpty) ...[
+          const Text(
+            'Most Relevant Results',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...relevant.map((artist) => _buildArtistResultCard(artist)),
+          const SizedBox(height: 16),
+        ],
+        if (related.isNotEmpty) ...[
+          const Text(
+            'Related Results',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...related.map((artist) => _buildArtistResultCard(artist)),
+        ],
+        if (relevant.isEmpty && related.isEmpty)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Text(
+                'No artists found',
+                style: TextStyle(
+                  color: Color(0xFF595959),
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildArtistResultCard(Map<String, dynamic> artist) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      width: double.infinity,
+      height: 67,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 14),
+          Container(
+            width: 52,
+            height: 52,
+            clipBehavior: Clip.antiAlias,
+            decoration: ShapeDecoration(
+              image: DecorationImage(
+                image: NetworkImage(artist['image']),
+                fit: BoxFit.cover,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(38),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  artist['name'],
+                  style: const TextStyle(
+                    color: Color(0xFF1D1B20),
+                    fontSize: 16,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w400,
+                    height: 1.75,
+                  ),
+                ),
+                Text(
+                  '${artist['followers']} Followers',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 11,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                artist['roles'],
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 11,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: (artist['genres'] as List<String>).map((genre) {
+                  return Container(
+                    margin: const EdgeInsets.only(left: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2C2C2C),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      genre,
+                      style: const TextStyle(
+                        color: Color(0xFFF5F5F5),
+                        fontSize: 10,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFilterChip(IconData icon, String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
