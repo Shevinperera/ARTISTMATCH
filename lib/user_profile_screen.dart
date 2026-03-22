@@ -16,6 +16,60 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   bool _isFollowing = false;
+  
+  void _showOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1C1C1E),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(100),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.flag_outlined, color: Colors.red, size: 22),
+              title: const Text(
+                'Report',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 15,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person_off_outlined, color: Colors.white, size: 22),
+              title: const Text(
+                'Block',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              onTap: () => Navigator.pop(context),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +140,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       right: 6,
                       top: 8,
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: _showOptions,
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           child: Row(
