@@ -223,6 +223,33 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                child: GestureDetector(
+                  onTap: () => setState(() => _isFollowing = !_isFollowing),
+                  child: Container(
+                    width: double.infinity,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: _isFollowing ? Colors.transparent : const Color(0xFF0088FF),
+                      borderRadius: BorderRadius.circular(8),
+                      border: _isFollowing ? Border.all(color: const Color(0xFF595959)) : null,
+                    ),
+                    child: Center(
+                      child: Text(
+                        _isFollowing ? 'Following' : 'Follow',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 80),
             ],
           ),
