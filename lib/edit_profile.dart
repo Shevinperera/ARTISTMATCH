@@ -22,9 +22,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String? _newProfilePicPath;
   List<String> _selectedRoles = [];
   List<String> _selectedGenres = [];
-
+  
   final List<String> _roles = ['Producer', 'Songwriter', 'Vocalist', 'DJ', 'Mixing Engineer', 'Mastering Engineer', 'Composer', 'Instrumentalist', 'Recording Engineer', 'Other'];
   final List<String> _genres = ['Hip Hop', 'House', 'R&B', 'Pop', 'Rock', 'Electronic', 'Jazz', 'Reggae', 'Afrobeats', 'Latin', 'K-Pop', 'Country', 'Amapiano', 'Techno', 'Indie', 'Phonk', 'Metal', 'Dancehall', 'Ambient', 'Drum and Bass'];
+  String? _selectedGender;
+  String? _selectedLocation;
+  List<String> _selectedLanguages = [];
+
+  final List<String> _genders = ['Male', 'Female'];
+  final List<String> _locations = ['Sri Lanka', 'India', 'United States', 'United Kingdom', 'Germany', 'France', 'Brazil', 'Nigeria', 'South Africa', 'Australia', 'Japan', 'Mexico', 'Canada', 'China', 'South Korea', 'Indonesia', 'Sweden', 'Italy', 'Egypt', 'Turkey'];
+  final List<String> _languages = ['Sinhala', 'Tamil', 'Hindi', 'English', 'German', 'French', 'Portuguese', 'Japanese', 'Spanish', 'Mandarin', 'Korean', 'Arabic'];
 
   @override
   void initState() {
@@ -35,6 +42,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         text: widget.userData['bio'] ?? '');
     _selectedRoles = List<String>.from(widget.userData['selectedRoles'] ?? []);
     _selectedGenres = List<String>.from(widget.userData['selectedGenres'] ?? []);
+    _selectedGender = widget.userData['gender'];
+    _selectedLocation = widget.userData['location'];
+    _selectedLanguages = List<String>.from(widget.userData['selectedLanguages'] ?? []);
   }
 
   @override
@@ -140,7 +150,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
         );
       }).toList(),
     );
-}
+  }
+  Widget _buildDropdown(List<String> items, String? value, String hint,
+      ValueChanged<String?> onChanged) {
+    return Container(
+      width: double.infinity,
+      height: 48,
+      padding: const EdgeInsets.only(left: 12, right: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF595959), width: 0.5),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: value,
+          hint: Text(hint,
+              style: TextStyle(
+                  color: Colors.white.withOpacity(0.3),
+                  fontSize: 14,
+                  fontFamily: 'Inter')),
+          dropdownColor: const Color(0xFF1A1A1A),
+          isExpanded: true,
+          icon: const Icon(Icons.keyboard_arrow_down,
+              color: Color(0xFF595959), size: 20),
+          style: const TextStyle(
+              color: Colors.white, fontSize: 14, fontFamily: 'Inter'),
+          items: items
+              .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+              .toList(),
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -292,6 +335,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     // Genres
                     _buildLabel('Genres'),
                     _buildChips(_genres, _selectedGenres, (val) => setState(() => _selectedGenres = val)),
+                    const SizedBox(height: 16),
+                    // Gender
+                    _buildLabel('Gender'),
+                    _buildDropdown(_genders, _selectedGender, 'Select Gender',
+                        (val) => setState(() => _selectedGender = val)),
+                    const SizedBox(height: 16),
+                    // Location
+                    _buildLabel('Location'),
+                    _buildDropdown(_locations, _selectedLocation, 'Select Country',
+                        (val) => setState(() => _selectedLocation = val)),
+                    const SizedBox(height: 16),
+                    // Languages
+                    _buildLabel('Preferred Languages'),
+                    _buildChips(_languages, _selectedLanguages,
+                        (val) => setState(() => _selectedLanguages = val)),
                     const SizedBox(height: 16),
                   ],
                 ),
