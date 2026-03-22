@@ -47,6 +47,50 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (file != null) setState(() => _newProfilePicPath = file.path);
   }
 
+  Widget _buildLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Color(0xFFF2F2F2),
+          fontSize: 14,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String hint,
+      {int maxLines = 1}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFF595959), width: 0.5),
+      ),
+      child: TextField(
+        controller: controller,
+        maxLines: maxLines,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontFamily: 'Inter',
+        ),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(
+            color: Colors.white.withOpacity(0.3),
+            fontSize: 14,
+            fontFamily: 'Inter',
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(12),
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,6 +227,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ),
                     const SizedBox(height: 24),
+                    // Name
+                    _buildLabel('Name'),
+                    _buildTextField(_nameController, 'Enter your name'),
+                    const SizedBox(height: 16),
+                    // Bio
+                    _buildLabel('Bio'),
+                    _buildTextField(_bioController, 'Write something about yourself', maxLines: 3),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),
