@@ -32,6 +32,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final List<String> _genders = ['Male', 'Female'];
   final List<String> _locations = ['Sri Lanka', 'India', 'United States', 'United Kingdom', 'Germany', 'France', 'Brazil', 'Nigeria', 'South Africa', 'Australia', 'Japan', 'Mexico', 'Canada', 'China', 'South Korea', 'Indonesia', 'Sweden', 'Italy', 'Egypt', 'Turkey'];
   final List<String> _languages = ['Sinhala', 'Tamil', 'Hindi', 'English', 'German', 'French', 'Portuguese', 'Japanese', 'Spanish', 'Mandarin', 'Korean', 'Arabic'];
+  final List<Map<String, TextEditingController>> _links = [];
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _selectedGender = widget.userData['gender'];
     _selectedLocation = widget.userData['location'];
     _selectedLanguages = List<String>.from(widget.userData['selectedLanguages'] ?? []);
+    
   }
 
   @override
@@ -184,6 +186,65 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
   }
+
+  Widget _buildLinksSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabel('Links'),
+        ..._links.asMap().entries.map((entry) {
+          final index = entry.key;
+          final link = entry.value;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      _buildTextField(link['name']!, 'Link name (e.g. Spotify)'),
+                      const SizedBox(height: 6),
+                      _buildTextField(link['url']!, 'URL'),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () => setState(() => _links.removeAt(index)),
+                  child: const Icon(Icons.remove_circle_outline,
+                      color: Color(0xFFFF383C), size: 22),
+                ),
+              ],
+            ),
+          );
+        }),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () => setState(() => _links.add({
+                'name': TextEditingController(),
+                'url': TextEditingController(),
+              })),
+          child: Row(
+            children: [
+              const Icon(Icons.add_circle_outline,
+                  color: Color(0xFF0088FF), size: 20),
+              const SizedBox(width: 8),
+              const Text(
+                'Add Link',
+                style: TextStyle(
+                  color: Color(0xFF0088FF),
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -351,6 +412,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     _buildChips(_languages, _selectedLanguages,
                         (val) => setState(() => _selectedLanguages = val)),
                     const SizedBox(height: 16),
+                    _buildLinksSection(),
+                    const SizedBox(height: 40),
                   ],
                 ),
               ),
