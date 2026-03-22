@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'artist_search_filters.dart';
 //import 'notifications_page.dart';
+import 'user_profile_screen.dart';
 // Artist Search update test
 class ArtistSearchPage extends StatefulWidget {
   const ArtistSearchPage({super.key});
@@ -338,7 +339,22 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
   }
 
   Widget _buildArtistResultCard(Map<String, dynamic> artist) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => UserProfileScreen(
+              token: 'dummy_token',
+              userData: {
+                'name': artist['name'],
+                'email': 'artist@example.com',
+              },
+            ),
+          ),
+        );
+      },
+    child: Container(
       margin: const EdgeInsets.only(bottom: 8),
       width: double.infinity,
       height: 67,
@@ -434,6 +450,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
           const SizedBox(width: 8),
         ],
       ),
+    ),
     );
   }
 
