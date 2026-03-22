@@ -852,4 +852,4 @@ class _NetworkImage extends StatelessWidget {
           child: const Icon(Icons.broken_image_outlined, color: AMColors.textSecondary),
         ),
       );
-}
+}// User profile screen UI
