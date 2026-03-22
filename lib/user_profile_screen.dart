@@ -250,6 +250,43 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  border: Border.all(
+                    color: const Color(0xFFE6E6E6).withOpacity(0.3),
+                    width: 0.5,
+                  ),
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Posts',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                        height: 1.40,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _postThumb('https://picsum.photos/127/121?random=30'),
+                        const SizedBox(width: 4),
+                        _postThumb('https://picsum.photos/127/121?random=31'),
+                        const SizedBox(width: 4),
+                        _postThumb('https://picsum.photos/127/121?random=32'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 80),
             ],
           ),
@@ -259,33 +296,48 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _statItem(String value, String label) {
-  return Expanded(
-    child: Column(
-      children: [
-        Text(
-          value,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w700,
-            height: 1.50,
+    return Expanded(
+      child: Column(
+        children: [
+          Text(
+            value,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w700,
+              height: 1.50,
+            ),
+          ),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w400,
+              height: 1.50,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _postThumb(String url) {
+    return Expanded(
+      child: AspectRatio(
+        aspectRatio: 127 / 121,
+        child: Image.network(
+          url,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => Container(
+            color: const Color(0xFF1A1A1A),
           ),
         ),
-        Text(
-          label,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-            height: 1.50,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
+
 }
