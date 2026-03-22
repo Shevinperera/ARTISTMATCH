@@ -24,6 +24,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final followers = widget.userData['followers'] ?? '2,018';
     final following = widget.userData['following'] ?? '2,085';
     final posts = widget.userData['posts'] ?? '3';
+    final roles = widget.userData['roles'] ?? 'Artist';
+    final bio = widget.userData['bio'] ?? 'Stream LA, out now!';
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -154,6 +156,70 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ],
                       ),
                     ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                child: Text(
+                  roles,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 9,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w900,
+                    height: 1.50,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Bio',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w600,
+                        height: 1.50,
+                      ),
+                    ),
+                    Text(
+                      bio,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1.50,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                child: Row(
+                  children: [
+                    const Text(
+                      'View Links',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 9,
+                        fontStyle: FontStyle.italic,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w500,
+                        height: 1.50,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.chevron_right, color: Colors.white, size: 12),
                   ],
                 ),
               ),
