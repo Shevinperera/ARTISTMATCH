@@ -3,6 +3,8 @@ import 'nav_bar.dart';
 import 'gig_post_page.dart';
 import 'user_profile_screen.dart';
 import 'messages_screen.dart'; // ← inbox (tap a chat to open ChatScreen)
+import 'home_page.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,10 +17,10 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    const GigPostPage(),                                                                          // 0 Home
-    const Center(child: Text("Explore - Coming Soon", style: TextStyle(color: Colors.white))),    // 1 Explore
-    const Center(child: Text("Add - Coming Soon",     style: TextStyle(color: Colors.white))),    // 2 Add
-    const MessagesScreen(),                                                                       // 3 Messages
+    const FeedPage(),                                                                          // 0 Home
+    const Center(child: Text("Explore - Coming Soon", style: TextStyle(color: Color.fromARGB(255, 146, 146, 146)))),    // 1 Explore
+    const GigPostPage(),    // 2 Add
+    const ConversationsScreen(currentUserId: 8),                                                                     // 3 Messages
     const UserProfileScreen(),                                                                    // 4 Profile
   ];
 

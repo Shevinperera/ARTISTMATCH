@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'gig_post_page.dart';
+import 'splash_screen.dart';
 import 'static_nav.dart';
 
 class ArtistMatchApp extends StatelessWidget {
@@ -9,7 +10,7 @@ class ArtistMatchApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const SignInScreen(),
+      home: const SplashScreen(),
     );
   }
 }

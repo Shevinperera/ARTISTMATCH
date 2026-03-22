@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Pages/login_page.dart'; 
+import 'Pages/login_page.dart';
+import 'Pages/splash_screen.dart';
 
 void main() async {
 
@@ -18,7 +19,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, 
       
       
-      home: SignInScreen(), 
+      home: SplashScreen(),
     );
   }
 }

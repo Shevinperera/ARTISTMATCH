@@ -35,13 +35,13 @@ class CustomNavBar extends StatelessWidget {
           label: "",
         ),
                 BottomNavigationBarItem(
-          icon: Icon(Icons.add_box_outlined, size: 30),
-          activeIcon: Icon(Icons.add_box, size: 30),
+          icon: Icon(Icons.star_border_outlined, size: 30),
+          activeIcon: Icon(Icons.star, size: 30),
           label: "",
         ),
                 BottomNavigationBarItem(
-          icon: Icon(Icons.notifications_outlined),
-          activeIcon: Icon(Icons.notifications),
+          icon: Icon(Icons.chat_bubble_outline),
+          activeIcon: Icon(Icons.chat_bubble_sharp),
           label: "",
         ),
                 BottomNavigationBarItem(

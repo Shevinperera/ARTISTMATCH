@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'gig_service.dart';
 
-// ─── Color palette (matches apply page)
+// ─── Color palette
 const kBg        = Color(0xFF000000);
 const kCard      = Color(0xFF1A1A2E);
 const kCardDeep  = Color(0xFF16213E);
@@ -19,14 +20,18 @@ class CreateGigPage extends StatefulWidget {
 }
 
 class _CreateGigPageState extends State<CreateGigPage> {
-  // ── Your original controllers (unchanged) 
   final titleController    = TextEditingController();
   final locationController = TextEditingController();
   final priceController    = TextEditingController();
   final dateController     = TextEditingController();
 
+  // Store the raw date/time for sending to backend
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+
   String? _selectedGenre;
   String? _selectedType;
+  bool _isLoading = false; // ← loading state for POST request
 
   final List<String> _genres = ['Acoustic','Jazz','Pop','R&B','Rock','Electronic','Hip-Hop','Classical'];
   final List<String> _types  = ['Solo', 'Duo', 'Band', 'DJ', 'Any'];
@@ -40,16 +45,61 @@ class _CreateGigPageState extends State<CreateGigPage> {
     super.dispose();
   }
 
-  void _submit() {
-    // ── Your original Navigator.pop logic (unchanged) 
-    final newGigData = {
-      "title":    titleController.text.isEmpty    ? "Untitled Gig"     : titleController.text,
-      "location": locationController.text.isEmpty ? "Unknown Location" : locationController.text,
-      "price":    priceController.text.isEmpty    ? "Rs 0"             : "Rs ${priceController.text}",
-      "date":     dateController.text.isEmpty     ? "TBD"              : dateController.text,
-      "color":    Colors.teal,
+  // ── SUBMIT: POST to backend, then pop with result ──────────────────────────
+  Future<void> _submit() async {
+    // Basic validation
+    if (titleController.text.trim().isEmpty ||
+        locationController.text.trim().isEmpty ||
+        priceController.text.trim().isEmpty ||
+        _selectedDate == null ||
+        _selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill in all required fields"),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    // Format date and time separately for the backend
+    final dateStr = "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2,'0')}-${_selectedDate!.day.toString().padLeft(2,'0')}";
+    final timeStr = "${_selectedTime!.hour.toString().padLeft(2,'0')}:${_selectedTime!.minute.toString().padLeft(2,'0')}";
+
+    final gigData = {
+      "eventTitle": titleController.text.trim(),
+      "venue":      locationController.text.trim(),
+      "date":       dateStr,
+      "time":       timeStr,
+      "genre":      _selectedGenre ?? "Other",
+      "pay":        priceController.text.trim(),
     };
-    Navigator.pop(context, newGigData);
+
+    final success = await GigService.postGig(gigData);
+
+    setState(() => _isLoading = false);
+
+    if (!mounted) return;
+
+    if (success) {
+      // Return the new gig data to GigPostPage so it can insert it into the list
+      Navigator.pop(context, {
+        "title":    titleController.text.trim(),
+        "location": locationController.text.trim(),
+        "price":    "Rs ${priceController.text.trim()}",
+        "date":     dateController.text, // human-readable version
+        "color":    Colors.teal,
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to post gig. Please try again."),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+    }
   }
 
   @override
@@ -83,7 +133,7 @@ class _CreateGigPageState extends State<CreateGigPage> {
               ),
             ),
 
-            // ── Scrollable Form 
+            // ── Scrollable Form
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -130,15 +180,12 @@ class _CreateGigPageState extends State<CreateGigPage> {
                       ),
                     ),
 
-                    // Gig Title
                     _FieldLabel('Gig Title'),
                     _AppInput(controller: titleController, hint: 'e.g. Acoustic Night', icon: Icons.title),
 
-                    // Location
                     _FieldLabel('Location'),
                     _AppInput(controller: locationController, hint: 'e.g. Hilton, Colombo', icon: Icons.location_on_outlined),
 
-                    // Price
                     _FieldLabel('Price (Rs) / night'),
                     Container(
                       decoration: BoxDecoration(color: kCard, borderRadius: BorderRadius.circular(12), border: Border.all(color: kBorder)),
@@ -167,7 +214,6 @@ class _CreateGigPageState extends State<CreateGigPage> {
                       ),
                     ),
 
-                    // Date & Time
                     _FieldLabel('Date & Time'),
                     GestureDetector(
                       onTap: () async {
@@ -195,6 +241,8 @@ class _CreateGigPageState extends State<CreateGigPage> {
                             ),
                           );
                           if (time != null) {
+                            _selectedDate = date;
+                            _selectedTime = time;
                             final months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
                             final formatted = '${months[date.month - 1]} ${date.day}, ${time.format(context)}';
                             setState(() => dateController.text = formatted);
@@ -210,7 +258,6 @@ class _CreateGigPageState extends State<CreateGigPage> {
                       ),
                     ),
 
-                    // Genre
                     _FieldLabel('Music Genre'),
                     _DropdownField(
                       hint: 'Select a genre',
@@ -220,7 +267,6 @@ class _CreateGigPageState extends State<CreateGigPage> {
                       onChanged: (v) => setState(() => _selectedGenre = v),
                     ),
 
-                    // Artist Type
                     _FieldLabel('Artist Type'),
                     _SegmentPicker(
                       options: _types,
@@ -233,22 +279,34 @@ class _CreateGigPageState extends State<CreateGigPage> {
                 ),
               ),
             ),
-                        // ── POST GIG Button 
+
+            // ── POST GIG Button
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
               child: GestureDetector(
-                onTap: _submit,
+                onTap: _isLoading ? null : _submit,
                 child: Container(
                   height: 52,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [kBlue, kBlueDark]),
+                    gradient: LinearGradient(
+                      colors: _isLoading
+                          ? [Colors.grey, Colors.grey.shade700]
+                          : [kBlue, kBlueDark],
+                    ),
                     borderRadius: BorderRadius.circular(14),
-                    boxShadow: [BoxShadow(color: kBlue.withOpacity(.3), blurRadius: 20, offset: const Offset(0, 6))],
+                    boxShadow: _isLoading
+                        ? []
+                        : [BoxShadow(color: kBlue.withOpacity(.3), blurRadius: 20, offset: const Offset(0, 6))],
                   ),
-                  child: const Center(
-                    child: Text('POST GIG',
-                      style: TextStyle(color: kTextPri, fontSize: 15, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
+                  child: Center(
+                    child: _isLoading
+                        ? const SizedBox(
+                      height: 22, width: 22,
+                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    )
+                        : const Text('POST GIG',
+                        style: TextStyle(color: kTextPri, fontSize: 15, fontWeight: FontWeight.w700, letterSpacing: 1.2)),
                   ),
                 ),
               ),
@@ -260,7 +318,7 @@ class _CreateGigPageState extends State<CreateGigPage> {
   }
 }
 
-// ─── Reusable Widgets 
+// ─── Reusable Widgets ──────────────────────────────────────────────────────────
 
 class _FieldLabel extends StatelessWidget {
   final String text;
@@ -269,7 +327,7 @@ class _FieldLabel extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(top: 14, bottom: 6),
     child: Text(text.toUpperCase(),
-      style: const TextStyle(color: kTextSec, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: .8)),
+        style: const TextStyle(color: kTextSec, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: .8)),
   );
 }
 
@@ -359,7 +417,7 @@ class _SegmentPicker extends StatelessWidget {
               border: Border.all(color: sel ? kBlue : kBorder),
             ),
             child: Text(o,
-              style: TextStyle(color: sel ? kTextPri : kTextSec, fontSize: 12, fontWeight: FontWeight.w600)),
+                style: TextStyle(color: sel ? kTextPri : kTextSec, fontSize: 12, fontWeight: FontWeight.w600)),
           ),
         );
       }).toList(),

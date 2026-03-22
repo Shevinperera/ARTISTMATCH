@@ -1,107 +1,11 @@
-// ─────────────────────────────────────────────
-//  messages_screen.dart  —  ArtistMatch
-//  Polished DM inbox UI (dummy data)
-// ─────────────────────────────────────────────
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'socket_service.dart';
 import 'chat_screen.dart';
 
-// ── Dummy data ───────────────────────────────────────────────────────────────
-
-class _Contact {
-  final String name;
-  final String avatar;
-  final String lastMessage;
-  final String time;
-  final bool isOnline;
-  final bool isMe;
-  final int unread;
-  final bool isVerified;
-
-  const _Contact({
-    required this.name,
-    required this.avatar,
-    required this.lastMessage,
-    required this.time,
-    this.isOnline = false,
-    this.isMe = false,
-    this.unread = 0,
-    this.isVerified = false,
-  });
-}
-
-final _dummyChats = [
-  _Contact(
-    name: 'Helena Hills',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200',
-    lastMessage: 'Lets meet up to do the vocals 🎤',
-    time: '2m',
-    isOnline: true,
-    unread: 3,
-    isVerified: true,
-  ),
-  _Contact(
-    name: 'Teezy',
-    avatar: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200',
-    lastMessage: 'Bro that new beat is FIRE 🔥',
-    time: '11m',
-    isOnline: true,
-    unread: 1,
-    isVerified: true,
-  ),
-  _Contact(
-    name: 'Marco V',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200',
-    lastMessage: 'You: I can do Friday, what time?',
-    time: '1h',
-    isOnline: false,
-    isMe: true,
-    unread: 0,
-    isVerified: false,
-  ),
-  _Contact(
-    name: 'DJ Pulse',
-    avatar: 'https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=200',
-    lastMessage: 'Check out my new set when you get a chance',
-    time: '3h',
-    isOnline: true,
-    unread: 0,
-    isVerified: false,
-  ),
-  _Contact(
-    name: 'Aria Nova',
-    avatar: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200',
-    lastMessage: 'You: Sent you the stems 📎',
-    time: 'Yesterday',
-    isOnline: false,
-    isMe: true,
-    unread: 0,
-    isVerified: true,
-  ),
-  _Contact(
-    name: 'Bass Brothers',
-    avatar: 'https://images.unsplash.com/photo-1471478331149-c72f17e33c73?w=200',
-    lastMessage: 'The gig at Industry was insane last night',
-    time: 'Yesterday',
-    isOnline: false,
-    unread: 0,
-    isVerified: false,
-  ),
-  _Contact(
-    name: 'Zara Bloom',
-    avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200',
-    lastMessage: 'You: Can we reschedule the session?',
-    time: 'Mon',
-    isOnline: false,
-    isMe: true,
-    unread: 0,
-    isVerified: false,
-  ),
-];
-
-// ── Colours ───────────────────────────────────────────────────────────────────
-
+// ── Colours ─────────────────────────────────
 const _bg      = Color(0xFF0A0A0A);
-const _surface = Color(0xFF141414);
 const _card    = Color(0xFF1C1C1E);
 const _border  = Color(0xFF252525);
 const _blue    = Color(0xFF0094FF);
@@ -109,20 +13,21 @@ const _blueDim = Color(0xFF00305A);
 const _pri     = Color(0xFFF5F5F5);
 const _sec     = Color(0xFF888888);
 const _muted   = Color(0xFF3A3A3A);
-const _green   = Color(0xFF30D158);
 
 // ─────────────────────────────────────────────
-//  Main Screen
-// ─────────────────────────────────────────────
 
-class MessagesScreen extends StatefulWidget {
-  const MessagesScreen({super.key});
+class ConversationsScreen extends StatefulWidget {
+  final int currentUserId;
+  const ConversationsScreen({super.key, required this.currentUserId});
+
   @override
-  State<MessagesScreen> createState() => _MessagesScreenState();
+  State<ConversationsScreen> createState() => _ConversationsScreenState();
 }
 
-class _MessagesScreenState extends State<MessagesScreen>
+class _ConversationsScreenState extends State<ConversationsScreen>
     with TickerProviderStateMixin {
+  List _conversations = [];
+  bool _loading = true;
   late final AnimationController _fadeCtrl;
 
   @override
@@ -132,25 +37,78 @@ class _MessagesScreenState extends State<MessagesScreen>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     )..forward();
+
+    _loadConversations();
+
+    // Real-time updates
+    SocketService.socket?.on("receiveMessage", (_) => _loadConversations());
+    SocketService.socket?.on("conversationUpdated", (_) => _loadConversations());
+  }
+
+  // ── LOAD CONVERSATIONS FROM API ─────────────────────────────
+  Future<void> _loadConversations() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:5000/api/messages/conversations/${widget.currentUserId}'),
+      );
+
+      if (response.statusCode == 200) {
+        final List data = jsonDecode(response.body);
+        setState(() {
+          _conversations = data.map((c) => {
+            ...c,
+            'other_user_id': int.tryParse(c['other_user_id'].toString()) ?? 0,
+            'unread_count': int.tryParse(c['unread_count'].toString()) ?? 0,
+          }).toList();
+          _loading = false;
+        });
+      } else {
+        setState(() => _loading = false);
+        print("Failed to load conversations: ${response.statusCode}");
+      }
+    } catch (e) {
+      setState(() => _loading = false);
+      print("Error loading conversations: $e");
+    }
+  }
+
+  int get _totalUnread {
+    return _conversations.fold(
+      0,
+          (sum, c) => sum + ((c['unread_count'] ?? 0) as int),
+    );
   }
 
   @override
   void dispose() {
+    SocketService.socket?.off("receiveMessage");
+    SocketService.socket?.off("conversationUpdated");
     _fadeCtrl.dispose();
     super.dispose();
   }
 
-  List<_Contact> get _filtered => _dummyChats;
+  // ── MARK CHAT AS READ ─────────────────────────────
+  Future<void> _markChatAsRead(int otherUserId) async {
+    try {
+      await http.put(
+        Uri.parse('http://10.0.2.2:5000/api/messages/read/$otherUserId/${widget.currentUserId}'),
+      );
+    } catch (e) {
+      print("Error marking as read: $e");
+    }
+  }
 
+  // ── BUILD UI ─────────────────────────────
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _bg,
       body: SafeArea(
-        child: FadeTransition(
+        child: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : FadeTransition(
           opacity: _fadeCtrl,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(),
               _buildSectionLabel(),
@@ -162,13 +120,10 @@ class _MessagesScreenState extends State<MessagesScreen>
     );
   }
 
-  // ── Header ──────────────────────────────────────────────────────────────────
-
   Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 16, 12),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,8 +134,6 @@ class _MessagesScreenState extends State<MessagesScreen>
                   color: _pri,
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: -0.8,
-                  height: 1,
                 ),
               ),
               const SizedBox(height: 5),
@@ -189,23 +142,22 @@ class _MessagesScreenState extends State<MessagesScreen>
                 decoration: BoxDecoration(
                   color: _blueDim,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: _blue.withOpacity(0.4)),
                 ),
-                child: const Text(
-                  '4 unread',
-                  style: TextStyle(
-                      color: _blue, fontSize: 11, fontWeight: FontWeight.w600),
+                child: Text(
+                  '$_totalUnread unread',
+                  style: const TextStyle(
+                    color: _blue,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
           ),
-
         ],
       ),
     );
   }
-
-  // ── Section label ────────────────────────────────────────────────────────────
 
   Widget _buildSectionLabel() {
     return Padding(
@@ -218,110 +170,85 @@ class _MessagesScreenState extends State<MessagesScreen>
               color: _sec,
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              letterSpacing: 0.6,
             ),
           ),
           const Spacer(),
           Text(
-            '${_dummyChats.length}',
-            style: const TextStyle(
-                color: _muted, fontSize: 11, fontWeight: FontWeight.w600),
+            '${_conversations.length}',
+            style: const TextStyle(color: _muted, fontSize: 11),
           ),
         ],
       ),
     );
   }
 
-  // ── Chat list ─────────────────────────────────────────────────────────────────
-
   Widget _buildChatList() {
-    final chats = _filtered;
     return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 24),
-      itemCount: chats.length,
-      itemBuilder: (context, i) => _AnimatedTile(
-        index: i,
-        child: _ChatTile(
-          contact: chats[i],
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ChatScreen(
-                chatId: 'demo_${chats[i].name.replaceAll(' ', '_')}',
-                otherUserName: chats[i].name,
-                otherUserAvatar: chats[i].avatar,
-                otherUserId: 'uid_${chats[i].name}',
-              ),
-            ),
+      itemCount: _conversations.length,
+      itemBuilder: (context, i) {
+        final convo = _conversations[i];
+        final unread = convo['unread_count'] ?? 0;
+
+        return _AnimatedTile(
+          index: i,
+          child: _ChatTile(
+            name: convo['other_user_name'] ?? 'User ${convo['other_user_id']}',
+            message: convo['message'] ?? '',
+            time: '',
+            avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200",
+            unread: unread,
+            onTap: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ChatScreen(
+                    currentUserId: widget.currentUserId,
+                    receiverId: convo['other_user_id'],
+                    receiverName: convo['other_user_name'] ?? 'User ${convo['other_user_id']}',
+                  ),
+                ),
+              );
+              // ✅ mark chat as read and reload
+              await _markChatAsRead(convo['other_user_id']);
+              _loadConversations();
+            },
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
 
-// ─────────────────────────────────────────────
-//  Chat tile
-// ─────────────────────────────────────────────
-
+// ── CHAT TILE ─────────────────────────────
 class _ChatTile extends StatelessWidget {
-  final _Contact contact;
+  final String name;
+  final String message;
+  final String time;
+  final String avatar;
+  final int unread;
   final VoidCallback onTap;
-  const _ChatTile({required this.contact, required this.onTap});
+
+  const _ChatTile({
+    required this.name,
+    required this.message,
+    required this.time,
+    required this.avatar,
+    required this.unread,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final hasUnread = contact.unread > 0;
+    final hasUnread = unread > 0;
 
     return GestureDetector(
       onTap: onTap,
-      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: [
-            // Avatar
-            Stack(
-              children: [
-                Container(
-                  width: 54,
-                  height: 54,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: hasUnread ? _blue.withOpacity(0.6) : _border,
-                      width: hasUnread ? 2 : 1.5,
-                    ),
-                  ),
-                  child: ClipOval(
-                    child: Image.network(
-                      contact.avatar,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                          color: _card,
-                          child: const Icon(Icons.person, color: _sec)),
-                    ),
-                  ),
-                ),
-                if (contact.isOnline)
-                  Positioned(
-                    right: 1,
-                    bottom: 1,
-                    child: Container(
-                      width: 13,
-                      height: 13,
-                      decoration: BoxDecoration(
-                        color: _green,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: _bg, width: 2),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+            CircleAvatar(radius: 27, backgroundImage: NetworkImage(avatar)),
             const SizedBox(width: 12),
-
-            // Text content
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,92 +256,47 @@ class _ChatTile extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                contact.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: _pri,
-                                  fontSize: 15,
-                                  fontWeight: hasUnread
-                                      ? FontWeight.w800
-                                      : FontWeight.w600,
-                                  letterSpacing: -0.2,
-                                ),
-                              ),
-                            ),
-                            if (contact.isVerified) ...[
-                              const SizedBox(width: 4),
-                              Container(
-                                width: 15,
-                                height: 15,
-                                decoration: const BoxDecoration(
-                                    color: _blue, shape: BoxShape.circle),
-                                child: const Icon(Icons.check,
-                                    color: Colors.white, size: 9),
-                              ),
-                            ],
-                          ],
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                            color: _pri,
+                            fontWeight: hasUnread ? FontWeight.bold : FontWeight.w500,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 8),
                       Text(
-                        contact.time,
+                        time,
                         style: TextStyle(
                           color: hasUnread ? _blue : _sec,
                           fontSize: 11,
-                          fontWeight:
-                          hasUnread ? FontWeight.w700 : FontWeight.w400,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
                       Expanded(
                         child: Text(
-                          contact.lastMessage,
+                          message,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: hasUnread
-                                ? _pri.withOpacity(0.75)
-                                : _sec,
-                            fontSize: 13,
-                            fontWeight: hasUnread
-                                ? FontWeight.w500
-                                : FontWeight.w400,
-                          ),
+                          style: TextStyle(color: hasUnread ? _pri : _sec),
                         ),
                       ),
-                      if (hasUnread) ...[
-                        const SizedBox(width: 8),
+                      if (hasUnread)
                         Container(
-                          constraints:
-                          const BoxConstraints(minWidth: 20),
-                          height: 20,
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 6),
-                          decoration: BoxDecoration(
+                          margin: const EdgeInsets.only(left: 8),
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
                             color: _blue,
-                            borderRadius: BorderRadius.circular(10),
+                            shape: BoxShape.circle,
                           ),
-                          child: Center(
-                            child: Text(
-                              '${contact.unread}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
+                          child: Text(
+                            "$unread",
+                            style: const TextStyle(color: Colors.white, fontSize: 11),
                           ),
                         ),
-                      ],
                     ],
                   ),
                 ],
@@ -427,14 +309,13 @@ class _ChatTile extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────
-//  Staggered slide-in animation per tile
-// ─────────────────────────────────────────────
-
+// ── ANIMATION ─────────────────────────────
 class _AnimatedTile extends StatefulWidget {
   final int index;
   final Widget child;
+
   const _AnimatedTile({required this.index, required this.child});
+
   @override
   State<_AnimatedTile> createState() => _AnimatedTileState();
 }
@@ -448,13 +329,9 @@ class _AnimatedTileState extends State<_AnimatedTile>
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 380));
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
     _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
-    _slide = Tween<Offset>(
-      begin: const Offset(0, 0.06),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+    _slide = Tween(begin: const Offset(0, 0.05), end: Offset.zero).animate(_fade);
 
     Future.delayed(Duration(milliseconds: widget.index * 50), () {
       if (mounted) _ctrl.forward();
@@ -468,8 +345,27 @@ class _AnimatedTileState extends State<_AnimatedTile>
   }
 
   @override
-  Widget build(BuildContext context) => FadeTransition(
-    opacity: _fade,
-    child: SlideTransition(position: _slide, child: widget.child),
-  );
+  Widget build(BuildContext context) {
+    return FadeTransition(opacity: _fade, child: SlideTransition(position: _slide, child: widget.child));
+  }
+}
+
+// ── MODEL ─────────────────────────────
+enum _ChatType { date, incomingText, outgoingText, outgoingFile }
+
+class _ChatItem {
+  final _ChatType type;
+  final String? text;
+
+  _ChatItem._(this.type, this.text);
+
+  factory _ChatItem.date(String t) => _ChatItem._(_ChatType.date, t);
+  factory _ChatItem.incomingText(String t) => _ChatItem._(_ChatType.incomingText, t);
+  factory _ChatItem.outgoingText(String t) => _ChatItem._(_ChatType.outgoingText, t);
+  factory _ChatItem.outgoingFile(String filename) => _ChatItem._(_ChatType.outgoingFile, filename);
+
+  Map<String, dynamic> toJson() => {'type': type.index, 'text': text};
+
+  factory _ChatItem.fromJson(Map<String, dynamic> json) =>
+      _ChatItem._(_ChatType.values[json['type']], json['text']);
 }
