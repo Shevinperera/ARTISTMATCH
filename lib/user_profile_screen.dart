@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'chat_screen.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final String token;
@@ -310,7 +311,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 27),
                 child: GestureDetector(
                   onTap: () {
-                    // TODO: navigate to message thread page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ChatScreen(
+                          currentUserId: 1, // TODO: replace with logged in user ID from backend
+                          receiverId: 2,    // TODO: replace with artist's real ID from backend
+                          receiverName: widget.userData['name'] ?? 'Artist',
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                     width: double.infinity,
