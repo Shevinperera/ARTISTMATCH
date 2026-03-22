@@ -250,21 +250,23 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
 
             // Scrollable body
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTrendingBanner(),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader('Suggested Artists'),
-                    _buildSuggestedArtists(),
-                    const SizedBox(height: 8),
-                    _buildSectionHeader('New Releases For You'),
-                    _buildNewReleases(),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
+              child: _isSearching
+                  ? _buildSearchResults() //MAKE THIS FUNCTION
+                  : SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildTrendingBanner(),
+                          const SizedBox(height: 16),
+                          _buildSectionHeader('Suggested Artists'),
+                          _buildSuggestedArtists(),
+                          const SizedBox(height: 8),
+                          _buildSectionHeader('New Releases For You'),
+                          _buildNewReleases(),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
             ),
           ],
         ),
