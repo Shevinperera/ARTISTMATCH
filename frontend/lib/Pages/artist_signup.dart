@@ -17,7 +17,6 @@ class _ArtistSignupState extends State<ArtistSignup> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  // Expanded lists
   final List<String> genres = [
     'Hip Hop', 'House', 'R&B', 'Pop', 'Rock', 'Electronic', 'Jazz', 'Reggae',
     'Afrobeats', 'Latin', 'K-Pop', 'Country', 'Amapiano', 'Techno', 'Indie',
@@ -29,8 +28,8 @@ class _ArtistSignupState extends State<ArtistSignup> {
   };
 
   final List<String> roles = [
-    'Producer', 'Songwriter', 'Vocalist', 'DJ', 'Mixing Engineer', 'Mastering Engineer',
-    'Composer', 'Instrumentalist', 'Recording Engineer', 'Other'
+    'Producer', 'Songwriter', 'Vocalist', 'DJ', 'Mixing Engineer',
+    'Mastering Engineer', 'Composer', 'Instrumentalist', 'Recording Engineer', 'Other'
   ];
 
   final List<String> genders = ['Male', 'Female'];
@@ -68,7 +67,7 @@ class _ArtistSignupState extends State<ArtistSignup> {
     setState(() => isLoading = true);
 
     try {
-      final url = Uri.parse('http://10.0.2.2:5000/auth/signup');
+      final url = Uri.parse('http://10.0.2.2:5000/auth/artists/signup');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -93,6 +92,7 @@ class _ArtistSignupState extends State<ArtistSignup> {
             builder: (context) => OTPVerificationPage(
               email: emailController.text.trim(),
               nextPage: const LoginPage(),
+              isArtist: true,
             ),
           ),
         );
@@ -107,8 +107,8 @@ class _ArtistSignupState extends State<ArtistSignup> {
   }
 
   void showSnack(String message) => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+    SnackBar(content: Text(message)),
+  );
 
   Widget _inputField(String hint, TextEditingController controller, {bool isPassword = false}) {
     return TextField(
@@ -150,6 +150,7 @@ class _ArtistSignupState extends State<ArtistSignup> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [

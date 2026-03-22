@@ -7,8 +7,7 @@ import 'messages_screen.dart';
 import 'user_profile_screen.dart';
 import 'artist_profile_screen.dart';
 import 'home_page.dart';
-
-
+import 'artist_search.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -23,6 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   String _role = 'user';
   String _token = '';
   Map<String, dynamic> _userData = {};
+  bool _loaded = false;
 
   @override
   void initState() {
@@ -38,14 +38,24 @@ class _MainScreenState extends State<MainScreen> {
       _token = prefs.getString('token') ?? '';
       final userDataString = prefs.getString('userData') ?? '{}';
       _userData = jsonDecode(userDataString);
+      _loaded = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_loaded || _userId == 0) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: CircularProgressIndicator(color: Color(0xFF0091EA)),
+        ),
+      );
+    }
+
     final List<Widget> _pages = [
-      const FeedPage(userId: _userId),
-      const Center(child: Text("Explore - Coming Soon", style: TextStyle(color: Color.fromARGB(255, 146, 146, 146)))),
+      FeedPage(userId: _userId),
+      const ArtistSearchPage(),
       const GigPostPage(),
       ConversationsScreen(currentUserId: _userId),
       _role == 'artist'

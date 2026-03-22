@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'gig_post_page.dart';
 // import 'gig_post_page.dart';
@@ -69,6 +72,40 @@ class _ApplyPageState extends State<ApplyPage> {
     _portfolioCtrl.dispose();
     _socialCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitApplication() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt('userId') ?? 0;
+
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:5000/api/gigs/apply'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'user_id': userId,
+          'artist_name': _nameCtrl.text,
+          'phone': _phoneCtrl.text,
+          'experience': _experience,
+          'cover_note': _coverCtrl.text,
+          'portfolio_url': _portfolioCtrl.text,
+          'social_media': _socialCtrl.text,
+          'availability': _availability,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        setState(() => _submitted = true);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to submit application')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Network error')),
+      );
+    }
   }
 
   @override
@@ -419,7 +456,7 @@ class _ApplyPageState extends State<ApplyPage> {
                 if (_step == 1) {
                   setState(() => _step = 2);
                 } else {
-                  setState(() => _submitted = true);
+                  _submitApplication();
                 }
               },
             ),

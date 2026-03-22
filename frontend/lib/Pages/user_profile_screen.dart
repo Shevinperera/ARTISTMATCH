@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
-import 'nav_bar.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final String token;
@@ -16,172 +16,439 @@ class UserProfileScreen extends StatefulWidget {
   State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
-class _UserProfileScreenState extends State<UserProfileScreen> {
-  int _currentIndex = 4;
+class _UserProfileScreenState extends State<UserProfileScreen>
+    with SingleTickerProviderStateMixin {
+  late final ScrollController _scroll;
+  late final AnimationController _animCtrl;
+  late final Animation<double> _fadeAnim;
+  bool _headerCollapsed = false;
+  static const double _collapseOffset = 180;
 
-  void _onNavTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  String get _name => widget.userData['name'] ?? 'User';
+  String get _email => widget.userData['email'] ?? '';
+  String get _avatarUrl =>
+      widget.userData['profile_image'] ??
+          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400';
+  String get _bannerUrl =>
+      widget.userData['banner'] ??
+          'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=900';
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll = ScrollController()
+      ..addListener(() {
+        final collapsed = _scroll.offset > _collapseOffset;
+        if (collapsed != _headerCollapsed) {
+          setState(() => _headerCollapsed = collapsed);
+        }
+      });
+    _animCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    )..forward();
+    _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
   }
 
-  void _logout() {
-    showDialog(
+  @override
+  void dispose() {
+    _scroll.dispose();
+    _animCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _logout() async {
+    final confirm = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Logout"),
-        content: const Text("Are you sure you want to logout?"),
+      builder: (_) => AlertDialog(
+        backgroundColor: const Color(0xFF1C1C1E),
+        title: const Text("Logout", style: TextStyle(color: Colors.white)),
+        content: const Text(
+          "Are you sure you want to logout?",
+          style: TextStyle(color: Color(0xFF888888)),
+        ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancel",
+                style: TextStyle(color: Color(0xFF888888))),
           ),
           TextButton(
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-                (route) => false,
-              );
-            },
-            child: const Text("Logout"),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Logout",
+                style: TextStyle(color: Color(0xFFFF453A))),
+          ),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+              (route) => false,
+        );
+      }
+    }
+  }
+
+  void _showOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF1C1C1E),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 36,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFF3A3A3A),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _sheetOption(Icons.share_outlined, 'Share Profile', Colors.white),
+            _sheetOption(
+              Icons.logout,
+              'Logout',
+              const Color(0xFFFF453A),
+              onTap: () {
+                Navigator.pop(context);
+                _logout();
+              },
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sheetOption(IconData icon, String label, Color color,
+      {VoidCallback? onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: color, size: 22),
+      title: Text(label,
+          style: TextStyle(
+              color: color, fontSize: 15, fontWeight: FontWeight.w400)),
+      onTap: onTap ?? () => Navigator.pop(context),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0A0A),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            controller: _scroll,
+            slivers: [
+              // ── HERO BANNER ──
+              SliverToBoxAdapter(
+                child: FadeTransition(
+                  opacity: _fadeAnim,
+                  child: SizedBox(
+                    height: 300,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.network(
+                          _bannerUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) =>
+                              Container(color: const Color(0xFF1C1C1E)),
+                        ),
+                        Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.transparent,
+                                Color(0x990A0A0A),
+                                Color(0xFF0A0A0A),
+                              ],
+                              stops: [0.3, 0.7, 1.0],
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 88,
+                                height: 88,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: const Color(0xFF0094FF),
+                                    width: 2.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFF0094FF)
+                                          .withOpacity(0.4),
+                                      blurRadius: 24,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    _avatarUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Container(
+                                      color: const Color(0xFF1C1C1E),
+                                      child: const Icon(Icons.person,
+                                          color: Colors.white54, size: 40),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                _name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Music Lover 🎧',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // ── STATS ROW ──
+              SliverToBoxAdapter(
+                child: FadeTransition(
+                  opacity: _fadeAnim,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1C1C1E),
+                        borderRadius: BorderRadius.circular(16),
+                        border:
+                        Border.all(color: const Color(0xFF2A2A2A)),
+                      ),
+                      child: Row(
+                        children: [
+                          _statCell('0', 'Posts'),
+                          _statDivider(),
+                          _statCell('0', 'Followers'),
+                          _statDivider(),
+                          _statCell('0', 'Following'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
+              // ── EMAIL TAG ──
+              if (_email.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: FadeTransition(
+                    opacity: _fadeAnim,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Wrap(
+                        spacing: 8,
+                        children: [
+                          _tag('✉️ $_email'),
+                          _tag('🎵 Music Lover'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+              SliverToBoxAdapter(
+                child: Divider(
+                    color: const Color(0xFF2A2A2A),
+                    height: 1,
+                    thickness: 1),
+              ),
+
+              // ── POSTS SECTION ──
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Posts',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF00305A),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          '0',
+                          style: TextStyle(
+                            color: Color(0xFF0094FF),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Icon(Icons.grid_off_outlined,
+                            color: Colors.white.withOpacity(0.2), size: 48),
+                        const SizedBox(height: 12),
+                        Text(
+                          'No posts yet',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.3),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              const SliverToBoxAdapter(child: SizedBox(height: 100)),
+            ],
+          ),
+
+          // ── STICKY TOP BAR ──
+          SafeArea(
+            child: Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                children: [
+                  _iconBtn(Icons.arrow_back_ios_new_rounded,
+                          () => Navigator.maybePop(context)),
+                  const Spacer(),
+                  AnimatedOpacity(
+                    opacity: _headerCollapsed ? 1 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Text(
+                      _name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  _iconBtn(Icons.more_horiz, _showOptions),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final name = widget.userData['name'] ?? 'No Name';
-    final email = widget.userData['email'] ?? 'No Email';
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        elevation: 0,
-      ),
-
-      body: SafeArea(
-        child: Column(
-          children: [
-            /// 🔥 BANNER
-            Stack(
-              children: [
-                Image.network(
-                  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                  height: 200,
-                  color: Colors.black.withOpacity(0.5),
-                ),
-                const Positioned.fill(
-                  child: Center(
-                    child: Text(
-                      "User Profile",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            /// CONTENT
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 15),
-
-                    /// AVATAR
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200',
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    /// NAME
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    /// TAGLINE
-                    const Text(
-                      "Music Lover 🎧",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    /// ROLE BADGE
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.blue,
-                      child: const Text(
-                        "USER",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    /// USER INFO
-                    _info("Email", email),
-
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              ),
-            ),
-
-            /// LOGOUT BUTTON
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _logout,
-                  child: const Text("Logout"),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-
-      /// 🔥 NAVBAR
-      bottomNavigationBar: CustomNavBar(
-        currentIndex: _currentIndex,
-        onTap: _onNavTap,
+  Widget _statCell(String value, String label) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(value,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800)),
+          const SizedBox(height: 2),
+          Text(label,
+              style: const TextStyle(
+                  color: Color(0xFF888888), fontSize: 10)),
+        ],
       ),
     );
   }
 
-  Widget _info(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+  Widget _statDivider() =>
+      Container(width: 1, height: 28, color: const Color(0xFF2A2A2A));
+
+  Widget _tag(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1C1C1E),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFF2A2A2A)),
+      ),
       child: Text(
-        "$label: ${value ?? 'N/A'}",
-        style: const TextStyle(color: Colors.white),
+        text,
+        style: const TextStyle(
+            color: Color(0xFFF5F5F5),
+            fontSize: 12,
+            fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  Widget _iconBtn(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: const Color(0xFF1C1C1E),
+          shape: BoxShape.circle,
+          border: Border.all(color: const Color(0xFF2A2A2A)),
+        ),
+        child: Icon(icon, color: Colors.white, size: 16),
       ),
     );
   }

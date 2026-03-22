@@ -24,6 +24,7 @@ class ConversationsScreen extends StatefulWidget {
   State<ConversationsScreen> createState() => _ConversationsScreenState();
 }
 
+
 class _ConversationsScreenState extends State<ConversationsScreen>
     with TickerProviderStateMixin {
   List _conversations = [];
@@ -47,6 +48,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
 
   // ── LOAD CONVERSATIONS FROM API ─────────────────────────────
   Future<void> _loadConversations() async {
+    print('Loading conversations for userId: ${widget.currentUserId}');
     try {
       final response = await http.get(
         Uri.parse('http://10.0.2.2:5000/api/messages/conversations/${widget.currentUserId}'),

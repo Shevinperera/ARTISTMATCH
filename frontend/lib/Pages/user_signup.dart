@@ -116,6 +116,7 @@ class _UserSignupState extends State<UserSignup> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
@@ -176,6 +177,7 @@ class _UserSignupState extends State<UserSignup> {
               child: isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
                   : const Text("Create Account", style: TextStyle(fontWeight: FontWeight.bold)),
+
             ),
             const SizedBox(height: 40),
           ],

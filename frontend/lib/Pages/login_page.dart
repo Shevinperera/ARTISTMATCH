@@ -3,10 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'user_signup.dart';
 import 'forgot_password_email.dart';
-// import 'artist_search.dart';
-import 'user_profile_screen.dart';
-import 'artist_profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'static_nav.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -50,21 +48,11 @@ class _LoginPageState extends State<LoginPage> {
         }
         await prefs.setString('role', data['role']);
         await prefs.setString('token', data['token']);
-        if (data['role'] == 'user') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UserProfileScreen(token: data['token'], userData: data['user']),
-            ),
-          );
-        } else if (data['role'] == 'artist') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ArtistProfileScreen(token: data['token'], userData: data['artist']),
-            ),
-          );
-        }
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data['error'] ?? "Login failed")));
       }
