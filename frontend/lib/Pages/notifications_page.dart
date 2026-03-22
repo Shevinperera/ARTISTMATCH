@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class NotificationsPage extends StatefulWidget {
-  const NotificationsPage({super.key});
+  final int userId;
+  const NotificationsPage({super.key, required this.userId});
 
   @override
   State<NotificationsPage> createState() => _NotificationsPageState();
@@ -11,6 +12,7 @@ class NotificationsPage extends StatefulWidget {
 
 
 class _NotificationsPageState extends State<NotificationsPage> {
+
   // Notification types
   static const String typeCollab = 'collab';
   static const String typeFollow = 'follow';
@@ -19,16 +21,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
   List<Map<String, dynamic>> _notifications = [];
   bool _loading = true;
 
+  late int _userId;
+
   @override
   void initState() {
     super.initState();
+    _userId = widget.userId;
     _fetchNotifications();
   }
-
   Future<void> _fetchNotifications() async {
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:5000/api/notifications/8'),
+        Uri.parse('http://10.0.2.2:5000/api/notifications/${widget.userId}'),
       );
 
       if (response.statusCode == 200) {

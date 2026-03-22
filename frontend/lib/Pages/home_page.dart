@@ -3,7 +3,8 @@ import 'notifications_page.dart';
 import 'upload_page.dart';
 
 class FeedPage extends StatefulWidget {
-  const FeedPage({super.key});
+  final int userId;
+  const FeedPage({super.key, required this.userId});
 
   @override
   State<FeedPage> createState() => _FeedPageState();
@@ -146,7 +147,7 @@ class _FeedPageState extends State<FeedPage> {
                   GestureDetector( //notifications icon---> notifications page
                     onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                      MaterialPageRoute(builder: (_) =>  NotificationsPage(userId: widget.userId)),
                     ),
                     child: const Icon(
                       Icons.notifications_outlined,
