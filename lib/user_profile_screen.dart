@@ -304,6 +304,44 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+              // Message button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                child: GestureDetector(
+                  onTap: () {
+                    // TODO: navigate to message thread page
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: const Color(0xFF595959),
+                        width: 1,
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.send_outlined, color: Colors.white, size: 16),
+                        SizedBox(width: 8),
+                        Text(
+                          'Message',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 16),
               Container(
                 width: double.infinity,
