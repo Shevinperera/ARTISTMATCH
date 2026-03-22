@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'edit_profile.dart';
 
 class MyProfilePage extends StatefulWidget {
   final String token;
@@ -178,7 +179,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 27),
                 child: GestureDetector(
                   onTap: () {
-                    // TODO: navigate to edit profile page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => EditProfilePage(userData: widget.userData),
+                      ),
+                    );
                   },
                   child: Container(
                     width: double.infinity,
