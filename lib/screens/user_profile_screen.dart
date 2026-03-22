@@ -855,3 +855,5 @@ class _NetworkImage extends StatelessWidget {
 }// User profile screen UI
 // Stats row section
 // Stats row showing followers, following, and posts
+// Identity strip displaying role tags
+// Identity strip displaying role tags
