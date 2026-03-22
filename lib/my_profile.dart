@@ -173,6 +173,38 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 27),
+                child: GestureDetector(
+                  onTap: () {
+                    // TODO: navigate to edit profile page
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF262626),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: const Color(0xFF363636),
+                        width: 1,
+                      ),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Edit Profile',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(height: 80),
             ],
           ),
