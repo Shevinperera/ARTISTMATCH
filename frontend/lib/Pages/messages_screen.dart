@@ -51,7 +51,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     print('Loading conversations for userId: ${widget.currentUserId}');
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:5000/api/messages/conversations/${widget.currentUserId}'),
+        Uri.parse('https://artistmatch-backend-production.up.railway.app/api/messages/conversations/${widget.currentUserId}'),
       );
 
       if (response.statusCode == 200) {
@@ -93,7 +93,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   Future<void> _markChatAsRead(int otherUserId) async {
     try {
       await http.put(
-        Uri.parse('http://10.0.2.2:5000/api/messages/read/$otherUserId/${widget.currentUserId}'),
+        Uri.parse('https://artistmatch-backend-production.up.railway.app/api/messages/read/$otherUserId/${widget.currentUserId}'),
       );
     } catch (e) {
       print("Error marking as read: $e");

@@ -7,7 +7,7 @@ class GigService {
   // Android emulator  → 10.0.2.2
   // iOS simulator     → 127.0.0.1
   // Real device       → e.g. 192.168.1.5  (your PC's LAN IP)
-  static const String baseUrl = 'http://10.0.2.2:5000/api/gigs';
+  static const String baseUrl = 'https://artistmatch-backend-production.up.railway.app/api/gigs';
  
   // ── Color rotation for gig cards (since DB doesn't store colors) ──────────
   static const List<Color> _cardColors = [

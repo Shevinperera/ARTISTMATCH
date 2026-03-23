@@ -32,7 +32,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Future<void> _fetchNotifications() async {
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:5000/api/notifications/${widget.userId}'),
+        Uri.parse('https://artistmatch-backend-production.up.railway.app/api/notifications/${widget.userId}'),
       );
 
       if (response.statusCode == 200) {

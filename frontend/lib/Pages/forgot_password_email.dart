@@ -14,7 +14,7 @@ class ForgotPasswordEmailPage extends StatefulWidget {
 class _ForgotPasswordEmailPageState extends State<ForgotPasswordEmailPage> {
   final emailController = TextEditingController();
   bool isLoading = false;
-  final baseUrl = "http://10.0.2.2:5000";
+  final baseUrl = "https://artistmatch-backend-production.up.railway.app";
 
   Future<void> sendOTP() async {
     setState(() => isLoading = true);
