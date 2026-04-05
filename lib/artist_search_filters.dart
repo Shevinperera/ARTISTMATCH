@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'artist_search.dart';
 
 class SearchFiltersPage extends StatefulWidget {
   final List<String> initialRoles;

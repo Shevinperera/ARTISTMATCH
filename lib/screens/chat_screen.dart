@@ -7,31 +7,70 @@ import 'package:permission_handler/permission_handler.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
+import 'socket_service.dart';
+import 'api_service.dart';
+
+class ChatScreen extends StatefulWidget {
+  final int currentUserId;
+  final int receiverId;
+  final String receiverName;
+
+  const ChatScreen({
+    super.key,
+    required this.currentUserId,
+    required this.receiverId,
+    required this.receiverName,
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
+  String get _chatKey => 'chat_${widget.currentUserId}_${widget.receiverId}';
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final List<_ChatItem> _items = [];
+
 
   // Mic (speech-to-text)
   final stt.SpeechToText _speech = stt.SpeechToText();
   bool _isListening = false;
 
   // Emoji panel
+
   bool _showEmojiPanel = false;
 
   @override
   void initState() {
     super.initState();
+
     _loadMessages();
+    debugPrint("💬 currentUserId: ${widget.currentUserId}, receiverId: ${widget.receiverId}, receiverName: ${widget.receiverName}");
+
+    _loadMessages(); // load from SharedPreferences or API
+
+    // Listen for incoming Socket messages
+    SocketService.socket?.on("receiveMessage", (data) {
+      // ✅ FIX: parse to int to handle both string and int from backend
+      final senderId = int.tryParse(data['senderId'].toString()) ?? -1;
+      final message = data['message'] ?? '';
+
+      if (senderId == widget.receiverId) {
+        setState(() {
+          _items.add(_ChatItem.incomingText(message));
+        });
+        _saveMessages();
+        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+      }
+    });
   }
 
   @override
   void dispose() {
+
+    SocketService.socket?.off("receiveMessage");
     _controller.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -73,12 +112,37 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  // ---------------- Storage ----------------
+  Future<void> _loadMessages() async {
+    await _loadApiMessages(); // ✅ always load fresh from API
   }
 
   Future<void> _saveMessages() async {
     final prefs = await SharedPreferences.getInstance();
     final encoded = jsonEncode(_items.map((e) => e.toJson()).toList());
     await prefs.setString('chat_history', encoded);
+    await prefs.setString(_chatKey, encoded);
+  }
+
+  Future<void> _loadApiMessages() async {
+    try {
+      List data = await ApiService.getMessages(widget.currentUserId, widget.receiverId);
+      setState(() {
+        _items.clear();
+        for (var msg in data) {
+          if (msg['sender_id'] == widget.currentUserId) {
+            _items.add(_ChatItem.outgoingText(msg['message'] ?? ''));
+          } else {
+            _items.add(_ChatItem.incomingText(msg['message'] ?? ''));
+          }
+        }
+      });
+      await _saveMessages();
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+    } catch (e) {
+      print("Failed to load messages from API: $e");
+    }
+>>>>>>> 998e9ba080b059dc2dafedd7b1e8cbbc2a8bf411
   }
 
   void _scrollToBottom() {
@@ -87,6 +151,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------- Send ----------
+  // ---------------- Send ----------------
   void _send() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
@@ -96,22 +161,32 @@ class _ChatScreenState extends State<ChatScreen> {
       _controller.clear();
     });
 
+    SocketService.sendMessage(
+      senderId: widget.currentUserId,
+      receiverId: widget.receiverId,
+      message: text,
+    );
+
+
     _saveMessages();
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
   }
 
   // ---------- Emoji ----------
-  void _toggleEmoji() {
+  // ---------------- Emoji -------  void _toggleEmoji() {
     FocusScope.of(context).unfocus();
     setState(() => _showEmojiPanel = !_showEmojiPanel);
   }
 
   void _addEmoji(String emoji) {
     _controller.text = _controller.text + emoji;
+    _controller.text += emoji;
+ 998e9ba080b059dc2dafedd7b1e8cbbc2a8bf411
     _controller.selection = TextSelection.fromPosition(
       TextPosition(offset: _controller.text.length),
     );
   }
+
 
   // ---------- Mic ----------
   Future<void> _toggleMic() async {
@@ -142,6 +217,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------- UI ----------
+  // ---------------- UI ----------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,6 +244,17 @@ class _ChatScreenState extends State<ChatScreen> {
               child: _HeaderTitle(
                 name: "Helena Hills",
                 status: "Active 11m ago",
+          children: [
+            const CircleAvatar(
+              radius: 16,
+              backgroundImage: NetworkImage(
+                  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200"),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _HeaderTitle(
+                name: widget.receiverName,
+                status: "Active",
               ),
             ),
           ],
@@ -189,7 +276,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 itemCount: _items.length,
                 itemBuilder: (context, index) {
                   final item = _items[index];
-
                   if (item.type == _ChatType.date) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -241,10 +327,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     );
                   }
 
+                  final isMe = item.type == _ChatType.outgoingText || item.type == _ChatType.outgoingFile;
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 6),
-                    child: Align(
-                      alignment: Alignment.centerRight,
+                    child:                       alignment: Alignment.centerRight,
                       child: _ChatBubble(
                         isMe: true,
                         position: _bubblePosition(index, true),
@@ -259,6 +346,18 @@ class _ChatScreenState extends State<ChatScreen> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
+=======
+                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      child: _ChatBubble(
+                        isMe: isMe,
+                        position: _BubblePos.single,
+                        child: Text(
+                          item.text!,
+                          style: TextStyle(
+                            color: isMe ? Colors.white : Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                     ),
                   );
@@ -275,7 +374,6 @@ class _ChatScreenState extends State<ChatScreen> {
               onImage: () {},
               onFocusText: () => setState(() => _showEmojiPanel = false),
             ),
-
             if (_showEmojiPanel) _EmojiPanel(onPick: _addEmoji),
           ],
         ),
