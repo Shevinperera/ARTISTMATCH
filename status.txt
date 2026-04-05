@@ -1,0 +1,61 @@
+﻿M  .gitignore
+M  README.md
+UU android/app/src/main/AndroidManifest.xml
+ M "backend files/ArtistMatch-backend"
+ M "backend files/artist-search-backend"
+M  frontend/assets/AM_logo2.png
+UA frontend/assets/trending_banner.png
+M  frontend/ios/Flutter/Debug.xcconfig
+M  frontend/ios/Flutter/Release.xcconfig
+M  frontend/linux/flutter/generated_plugin_registrant.cc
+M  frontend/macos/Flutter/Flutter-Debug.xcconfig
+M  frontend/macos/Flutter/Flutter-Release.xcconfig
+UU frontend/macos/Flutter/GeneratedPluginRegistrant.swift
+ M frontend/pubspec.lock
+UU frontend/pubspec.yaml
+M  frontend/windows/flutter/generated_plugin_registrant.cc
+M  frontend/windows/flutter/generated_plugins.cmake
+A  ios/Flutter/Generated.xcconfig
+A  ios/Flutter/ephemeral/flutter_lldb_helper.py
+A  ios/Flutter/ephemeral/flutter_lldbinit
+A  ios/Flutter/flutter_export_environment.sh
+A  ios/Podfile
+A  "ios/Podfile 2"
+A  ios/Runner/GeneratedPluginRegistrant.h
+A  ios/Runner/GeneratedPluginRegistrant.m
+A  lib/artist_search.dart
+A  lib/artist_search_filters.dart
+A  lib/chat_screen.dart
+A  lib/edit_profile.dart
+A  lib/home_page.dart
+DU lib/main.dart
+A  lib/my_profile.dart
+A  lib/nav_bar.dart
+A  lib/notifications_page.dart
+A  lib/screens/chat_screen.dart
+A  lib/screens/sign_in_screen.dart
+A  lib/screens/user_profile_screen.dart
+A  lib/static_nav.dart
+A  lib/upload_page.dart
+A  lib/upload_preview_page.dart
+A  lib/user_profile_screen.dart
+A  linux/flutter/ephemeral/.plugin_symlinks/file_selector_linux
+A  linux/flutter/ephemeral/.plugin_symlinks/image_picker_linux
+A  linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux
+A  linux/flutter/ephemeral/.plugin_symlinks/shared_preferences_linux
+A  linux/flutter/generated_plugin_registrant.cc
+A  linux/flutter/generated_plugin_registrant.h
+A  linux/flutter/generated_plugins.cmake
+A  macos/Flutter/GeneratedPluginRegistrant.swift
+A  macos/Flutter/ephemeral/Flutter-Generated.xcconfig
+A  macos/Flutter/ephemeral/flutter_export_environment.sh
+A  macos/Podfile
+A  "macos/Podfile 2"
+UU pubspec.lock
+A  status
+A  windows/flutter/ephemeral/.plugin_symlinks/path_provider_windows
+A  windows/flutter/ephemeral/.plugin_symlinks/permission_handler_windows
+A  windows/flutter/ephemeral/.plugin_symlinks/shared_preferences_windows
+A  windows/flutter/ephemeral/.plugin_symlinks/speech_to_text_windows
+?? conflicts.txt
+?? status.txt

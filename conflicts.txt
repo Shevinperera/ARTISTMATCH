@@ -1,0 +1,6 @@
+﻿android/app/src/main/AndroidManifest.xml
+frontend/assets/trending_banner.png
+frontend/macos/Flutter/GeneratedPluginRegistrant.swift
+frontend/pubspec.yaml
+lib/main.dart
+pubspec.lock
