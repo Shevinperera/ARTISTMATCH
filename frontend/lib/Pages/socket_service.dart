@@ -5,7 +5,7 @@ class SocketService {
 
   static void connect(int userId) {
     socket = IO.io(
-      "https://artistmatch-backend-production.up.railway.app",
+      "http://10.0.2.2:5000",
       IO.OptionBuilder()
           .setTransports(['websocket', 'polling']) // ✅ allow both
           .disableAutoConnect()

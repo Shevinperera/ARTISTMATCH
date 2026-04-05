@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
  
 class GigService {
-  // ── Change this to your machine's local IP when testing on a real device
-  // Android emulator  → 10.0.2.2
-  // iOS simulator     → 127.0.0.1
-  // Real device       → e.g. 192.168.1.5  (your PC's LAN IP)
-  static const String baseUrl = 'https://artistmatch-backend-production.up.railway.app/api/gigs';
+
+  static const String baseUrl = 'http://10.0.2.2:5000/api/gigs';
  
   // ── Color rotation for gig cards (since DB doesn't store colors) ──────────
   static const List<Color> _cardColors = [
@@ -20,8 +17,7 @@ class GigService {
   ];
  
   // ── POST a new gig to Express backend ─────────────────────────────────────
-  // gigData keys must match what gigs.routes.js expects:
-  //   eventTitle, venue, date (YYYY-MM-DD), time (HH:MM), genre, pay
+
   static Future<bool> postGig(Map<String, String> gigData) async {
     try {
       final response = await http.post(

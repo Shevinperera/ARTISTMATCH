@@ -8,6 +8,7 @@ import 'user_profile_screen.dart';
 import 'artist_profile_screen.dart';
 import 'home_page.dart';
 import 'artist_search.dart';
+import 'socket_service.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -40,6 +41,11 @@ class _MainScreenState extends State<MainScreen> {
       _userData = jsonDecode(userDataString);
       _loaded = true;
     });
+
+    // Connect socket for real-time messaging
+    if (_userId != 0) {
+      SocketService.connect(_userId);
+    }
   }
 
   @override

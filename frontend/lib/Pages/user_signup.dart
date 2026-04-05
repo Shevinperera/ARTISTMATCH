@@ -49,7 +49,7 @@ class _UserSignupState extends State<UserSignup> {
     setState(() => isLoading = true);
 
     try {
-      final url = Uri.parse('https://artistmatch-backend-production.up.railway.app/auth/signup');
+      final url = Uri.parse('http://10.0.2.2:5000/auth/signup');
       final genreIds = selectedGenres.map((g) => genreMap[g]!).toList();
 
       final response = await http.post(

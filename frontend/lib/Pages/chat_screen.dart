@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'socket_service.dart';
 import 'api_service.dart';
@@ -96,7 +97,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------------- Send ----------------
-  void _send() {
+  void _send() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
@@ -105,11 +106,20 @@ class _ChatScreenState extends State<ChatScreen> {
       _controller.clear();
     });
 
-    SocketService.sendMessage(
-      senderId: widget.currentUserId,
-      receiverId: widget.receiverId,
-      message: text,
-    );
+    // Save via HTTP POST — this also triggers socket events on the server
+    try {
+      await http.post(
+        Uri.parse('http://10.0.2.2:5000/api/messages'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'sender_id': widget.currentUserId,
+          'receiver_id': widget.receiverId,
+          'message': text,
+        }),
+      );
+    } catch (e) {
+      debugPrint("Failed to send message: $e");
+    }
 
     _saveMessages();
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());

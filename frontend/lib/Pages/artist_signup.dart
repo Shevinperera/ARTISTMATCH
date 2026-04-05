@@ -67,7 +67,7 @@ class _ArtistSignupState extends State<ArtistSignup> {
     setState(() => isLoading = true);
 
     try {
-      final url = Uri.parse('https://artistmatch-backend-production.up.railway.app/auth/artists/signup');
+      final url = Uri.parse('http://10.0.2.2:5000/auth/artists/signup');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

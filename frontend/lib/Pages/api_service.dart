@@ -63,7 +63,7 @@ class ApiService {
   // Get messages between 2 users
   static Future<List> getMessages(int user1, int user2) async {
     final response = await http.get(
-      Uri.parse('https://artistmatch-backend-production.up.railway.app/api/messages/$user1/$user2'),
+      Uri.parse('http://10.0.2.2:5000/api/messages/$user1/$user2'),
     );
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -75,7 +75,7 @@ class ApiService {
   // Get conversations list
   static Future<List> getConversations(int userId) async {
     final response = await http.get(
-      Uri.parse('https://artistmatch-backend-production.up.railway.app/api/messages/conversations/$userId'),
+      Uri.parse('http://10.0.2.2:5000/api/messages/conversations/$userId'),
     );
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -87,7 +87,7 @@ class ApiService {
   // Mark messages as read
   static Future<void> markAsRead(int senderId, int receiverId) async {
     await http.put(
-      Uri.parse('https://artistmatch-backend-production.up.railway.app/api/messages/read/$senderId/$receiverId'),
+      Uri.parse('http://10.0.2.2:5000/api/messages/read/$senderId/$receiverId'),
     );
   }
 }

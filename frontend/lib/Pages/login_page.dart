@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => isLoading = true);
 
     try {
-      final url = Uri.parse('https://artistmatch-backend-production.up.railway.app/auth/login');
+      final url = Uri.parse('http://10.0.2.2:5000/auth/login');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

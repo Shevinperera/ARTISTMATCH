@@ -1,2 +1,2 @@
-const String baseUrl = 'https://artistmatch-backend-production.up.railway.app';
-const String searchUrl = 'https://artistmatch-search-backend-production.up.railway.app';
+const String baseUrl = 'http://10.0.2.2:5000';
+const String searchBaseUrl = 'http://10.0.2.2:5001';

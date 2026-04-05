@@ -15,7 +15,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final passwordController = TextEditingController();
   final confirmController = TextEditingController();
   bool isLoading = false;
-  final baseUrl = "https://artistmatch-backend-production.up.railway.app";
+  final baseUrl = "http://10.0.2.2:5000";
 
   Future<void> resetPassword() async {
     if (passwordController.text != confirmController.text) {

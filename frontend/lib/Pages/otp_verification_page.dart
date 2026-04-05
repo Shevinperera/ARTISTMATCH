@@ -20,7 +20,7 @@ class OTPVerificationPage extends StatefulWidget {
 class _OTPVerificationPageState extends State<OTPVerificationPage> {
   final otpController = TextEditingController();
   bool isLoading = false;
-  final baseUrl = "https://artistmatch-backend-production.up.railway.app";
+  final baseUrl = "http://10.0.2.2:5000";
 
   Future<void> verifyOTP() async {
     setState(() => isLoading = true);

@@ -80,7 +80,7 @@ class _ApplyPageState extends State<ApplyPage> {
       final userId = prefs.getInt('userId') ?? 0;
 
       final response = await http.post(
-        Uri.parse('https://artistmatch-backend-production.up.railway.app/api/gigs/apply'),
+        Uri.parse('http://10.0.2.2:5000/api/gigs/apply'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'user_id': userId,
