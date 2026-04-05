@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'nav_bar.dart';
 import 'artist_search.dart';
+<<<<<<< HEAD
 import 'home_page.dart';
+=======
+>>>>>>> main
 //import 'notifications_page.dart';
 
 class MainScreen extends StatefulWidget {

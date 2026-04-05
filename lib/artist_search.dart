@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'artist_search_filters.dart';
 //import 'notifications_page.dart';
+<<<<<<< HEAD
+=======
+import 'user_profile_screen.dart';
+>>>>>>> main
 // Artist Search update test
 class ArtistSearchPage extends StatefulWidget {
   const ArtistSearchPage({super.key});
@@ -12,15 +16,25 @@ class ArtistSearchPage extends StatefulWidget {
 class _ArtistSearchPageState extends State<ArtistSearchPage> {
   int _currentBannerIndex = 0;
   int _selectedNavIndex = 0;
+  List<String> _selectedRoles = [];
+  List<String> _selectedGenres = [];
+  List<String> _selectedTrackTypes = [];
+  String? _selectedGender;
+  List<String> _selectedLanguages = [];
+  String? _selectedExp;
+  String? _selectedLocation;
+  final TextEditingController _searchController = TextEditingController();
+  bool _isSearching = false;
+  String _searchQuery = '';
 
-  final List<Map<String, String>> _suggestedArtists = [
+  final List<Map<String, String>> _suggestedArtists = [ // temp pictures 
     {'name': 'Costa', 'image': 'https://piscum.photos/76x76'},
     {'name': 'Misfit', 'image': 'https://piscum.photos/76x76'},
     {'name': 'SG Lewis', 'image': 'https://piscum.photos/76x76'},
     {'name': 'Chase Atlantic', 'image': 'https://piscum.photos/76x76'},
   ];
 
-  final List<Map<String, String>> _newReleases = [
+  final List<Map<String, String>> _newReleases = [ // dummy data for search page 
     {
       'title': '3005',
       'artist': 'Misfit',
@@ -40,6 +54,46 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
       'image': 'https://piscum.photos/148x148',
     },
   ];
+  final List<Map<String, dynamic>> _allArtists = [ // dummy data for search results
+    {
+      'name': 'SG Lewis',
+      'roles': 'Producer, DJ',
+      'followers': '479',
+      'genres': ['#MinimalHouse', '#UKG'],
+      'image': 'https://picsum.photos/52/52?random=10',
+      'relevant': true,
+    },
+    {
+      'name': 'FISHER',
+      'roles': 'DJ, Producer',
+      'followers': '7,839',
+      'genres': ['#TechHouse', '#DeepHouse'],
+      'image': 'https://picsum.photos/52/52?random=11',
+      'relevant': false,
+    },
+    {
+      'name': 'Costa',
+      'roles': 'Musician',
+      'followers': '1,200',
+      'genres': ['#Indie', '#Pop'],
+      'image': 'https://picsum.photos/52/52?random=12',
+      'relevant': false,
+    },
+    {
+      'name': 'Misfit',
+      'roles': 'Producer',
+      'followers': '890',
+      'genres': ['#HipHop', '#Beats'],
+      'image': 'https://picsum.photos/52/52?random=13',
+      'relevant': false,
+    },
+  ];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,25 +110,44 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                   Expanded(
                     child: Container(
                       height: 40,
-                      padding: const EdgeInsets.only(top: 8, left: 12, right: 16, bottom: 8),
+                      padding: const EdgeInsets.only(left: 12, right: 16),
                       decoration: ShapeDecoration(
                         color: const Color(0xFF595959),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Icon(Icons.search, color: Color(0xFFF7F7F7), size: 20),
-                          SizedBox(width: 12),
-                          Text(
-                            'ArtistSearch',
-                            style: TextStyle(
-                              color: Color(0xFFF7F7F7),
-                              fontSize: 16,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              height: 1.50,
+                          const Icon(Icons.search, color: Color(0xFFF7F7F7), size: 20),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              style: const TextStyle(
+                                color: Color(0xFFF7F7F7),
+                                fontSize: 16,
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.w400,
+                              ),
+                              decoration: const InputDecoration(
+                                hintText: 'ArtistSearch',
+                                hintStyle: TextStyle(
+                                  color: Color(0xFFF7F7F7),
+                                  fontSize: 16,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                border: InputBorder.none,
+                                isDense: true,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _searchQuery = value;
+                                  _isSearching = value.isNotEmpty;
+                                });
+                              },
                             ),
                           ),
                         ],
@@ -83,8 +156,8 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
+                    onTap: () async {
+                      final result = await showModalBottomSheet<Map<String, dynamic>>(
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
@@ -92,20 +165,67 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
                           initialChildSize: 0.85,
                           minChildSize: 0.5,
                           maxChildSize: 0.95,
-                          builder: (_, controller) => const SearchFiltersPage(),
+                          builder: (_, controller) => SearchFiltersPage(
+                            initialRoles: _selectedRoles,
+                            initialGenres: _selectedGenres,
+                            initialTrackTypes: _selectedTrackTypes,
+                            initialGender: _selectedGender,
+                            initialLanguages: _selectedLanguages,
+                            initialExp: _selectedExp,
+                            initialLocation: _selectedLocation,
+                          ),
                         ),
                       );
+                      if (result != null) {
+                        setState(() {
+                          _selectedRoles = result['roles'] ?? [];
+                          _selectedGenres = result['genres'] ?? [];
+                          _selectedTrackTypes = result['trackTypes'] ?? [];
+                          _selectedGender = result['gender'];
+                          _selectedLanguages = result['languages'] ?? [];
+                          _selectedExp = result['exp'];
+                          _selectedLocation = result['location'];
+                        });
+                      }
                     },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFF595959),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                    child: SizedBox(
+                      width: 46,
+                      height: 46,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFF595959),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Icon(Icons.tune, color: Color(0xFFF7F7F7), size: 20),
+                          ),
+                          if (_selectedRoles.isNotEmpty ||
+                              _selectedGenres.isNotEmpty ||
+                              _selectedTrackTypes.isNotEmpty ||
+                              _selectedGender != null ||
+                              _selectedLanguages.isNotEmpty ||
+                              _selectedExp != null ||
+                              _selectedLocation != null)
+                            Positioned(
+                              right: -2,
+                              top: -2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF0088FF),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                      child: const Icon(Icons.tune, color: Color(0xFFF7F7F7), size: 20),
                     ),
                   ),
                 ],
@@ -134,25 +254,206 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
 
             // Scrollable body
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTrendingBanner(),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader('Suggested Artists'),
-                    _buildSuggestedArtists(),
-                    const SizedBox(height: 8),
-                    _buildSectionHeader('New Releases For You'),
-                    _buildNewReleases(),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
+              child: _isSearching
+                  ? _buildSearchResults() //MAKE THIS FUNCTION
+                  : SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildTrendingBanner(),
+                          const SizedBox(height: 16),
+                          _buildSectionHeader('Suggested Artists'),
+                          _buildSuggestedArtists(),
+                          const SizedBox(height: 8),
+                          _buildSectionHeader('New Releases For You'),
+                          _buildNewReleases(),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
+                    ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSearchResults() {
+    final query = _searchQuery.toLowerCase();
+    final relevant = _allArtists
+        .where((a) =>
+            a['name'].toString().toLowerCase().contains(query) &&
+            a['relevant'] == true)
+        .toList();
+    final related = _allArtists
+        .where((a) =>
+            a['name'].toString().toLowerCase().contains(query) &&
+            a['relevant'] == false)
+        .toList();
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      children: [
+        if (relevant.isNotEmpty) ...[
+          const Text(
+            'Most Relevant Results',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...relevant.map((artist) => _buildArtistResultCard(artist)),
+          const SizedBox(height: 16),
+        ],
+        if (related.isNotEmpty) ...[
+          const Text(
+            'Related Results',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontFamily: 'Inter',
+              fontWeight: FontWeight.w800,
+              height: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...related.map((artist) => _buildArtistResultCard(artist)),
+        ],
+        if (relevant.isEmpty && related.isEmpty)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Text(
+                'No artists found',
+                style: TextStyle(
+                  color: Color(0xFF595959),
+                  fontSize: 14,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildArtistResultCard(Map<String, dynamic> artist) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => UserProfileScreen(
+              token: 'dummy_token',
+              userData: {
+                'name': artist['name'],
+                'email': 'artist@example.com',
+              },
+            ),
+          ),
+        );
+      },
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      width: double.infinity,
+      height: 67,
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 14),
+          Container(
+            width: 52,
+            height: 52,
+            clipBehavior: Clip.antiAlias,
+            decoration: ShapeDecoration(
+              image: DecorationImage(
+                image: NetworkImage(artist['image']),
+                fit: BoxFit.cover,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(38),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  artist['name'],
+                  style: const TextStyle(
+                    color: Color(0xFF1D1B20),
+                    fontSize: 16,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w400,
+                    height: 1.75,
+                  ),
+                ),
+                Text(
+                  '${artist['followers']} Followers',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 11,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                artist['roles'],
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 11,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: (artist['genres'] as List<String>).map((genre) {
+                  return Container(
+                    margin: const EdgeInsets.only(left: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2C2C2C),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      genre,
+                      style: const TextStyle(
+                        color: Color(0xFFF5F5F5),
+                        fontSize: 10,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
+                        height: 1,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+    ),
     );
   }
 
@@ -290,7 +591,7 @@ class _ArtistSearchPageState extends State<ArtistSearchPage> {
 
   Widget _buildSuggestedArtists() {
     return SizedBox(
-      height: 120,
+      height: 124,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
