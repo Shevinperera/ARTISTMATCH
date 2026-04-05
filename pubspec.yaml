@@ -10,11 +10,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+<<<<<<< HEAD
 
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.2.2
   permission_handler: ^11.3.1
   speech_to_text: ^7.0.0
+=======
+  cupertino_icons: ^1.0.8
+  image_picker: ^1.0.7
+  video_player: ^2.8.3
+
+
+>>>>>>> 2c33f19ca12066cdb523f7ea680cc40682fea54e
 dev_dependencies:
   flutter_test:
     sdk: flutter
