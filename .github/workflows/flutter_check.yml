@@ -1,0 +1,36 @@
+name: Flutter CI
+
+# This tells GitHub to run this script every time someone pushes to the main branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # Runs the check on a virtual Linux machine
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Grabs your team's code from the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Installs Flutter on the virtual machine
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 3. Downloads all your packages (like the 'http' package we just talked about)
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # 4. Checks the code for any red squiggly line errors or bad formatting
+      - name: Analyze Code
+        run: flutter analyze
+
+      # 5. (Optional) Runs tests if you have any written
+      - name: Run Tests
+        run: flutter test

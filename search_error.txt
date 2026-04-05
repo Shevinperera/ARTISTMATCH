@@ -1,0 +1,81 @@
+﻿[dotenv@17.3.1] injecting env (7) from .env -- tip: ΓÜÖ∩╕Å  write to custom object with { processEnv: myObject }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  write to custom object with { processEnv: myObject }
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ΓÜÖ∩╕Å  override existing env vars with { override: true }
+node : D:\ArtistMatch_
+SE-31\ArtistMatch\back
+end files\artist-searc
+h-backend\node_modules
+\router\index.js:392
+At line:1 char:1
++ node app.js 2>&1 | 
+Out-File -FilePath "d:
+\ArtistMatch_SE-31\Art
+istMat ...
++ ~~~~~~~~~~~~~~~~
+    + CategoryInfo    
+          : 
+NotSpecified: (D    
+:\ArtistMatch_...er\i 
+   
+ndex.js:392:String) [ 
+   ], RemoteException
+    + 
+FullyQualifiedError   
+ Id : 
+NativeCommandErr    or
+ 
+      throw new 
+TypeError('argument 
+handler must be a 
+function')
+      ^
+
+TypeError: argument 
+handler must be a 
+function
+    at router.use (D:\
+ArtistMatch_SE-31\Arti
+stMatch\backend files\
+artist-search-backend\
+node_modules\router\in
+dex.js:392:13)
+    at 
+app.<anonymous> (D:\Ar
+tistMatch_SE-31\Artist
+Match\backend files\ar
+tist-search-backend\no
+de_modules\express\lib
+\application.js:222:21
+)
+    at Array.forEach 
+(<anonymous>)
+    at app.use (D:\Art
+istMatch_SE-31\ArtistM
+atch\backend files\art
+ist-search-backend\nod
+e_modules\express\lib\
+application.js:219:7)
+    at 
+Object.<anonymous> (D:
+\ArtistMatch_SE-31\Art
+istMatch\backend files
+\artist-search-backend
+\app.js:58:5)
+    at 
+Module._compile (node:
+internal/modules/cjs/l
+oader:1761:14)
+    at Object..js (nod
+e:internal/modules/cjs
+/loader:1893:10)
+    at Module.load (no
+de:internal/modules/cj
+s/loader:1481:32)
+    at Module._load (n
+ode:internal/modules/c
+js/loader:1300:12)
+    at TracingChannel.
+traceSync (node:diagno
+stics_channel:328:14)
+
+Node.js v24.12.0

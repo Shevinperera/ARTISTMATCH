@@ -1,213 +1,136 @@
 import 'package:flutter/material.dart';
-import 'gig_post_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'user_signup.dart';
+import 'forgot_password_email.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'static_nav.dart';
 
-void main() {
-  runApp(const ArtistMatchApp());
-}
 
-class ArtistMatchApp extends StatelessWidget {
-  const ArtistMatchApp({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const SignInScreen(),
-    );
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> loginUser() async {
+    setState(() => isLoading = true);
+
+    try {
+      final url = Uri.parse('http://10.0.2.2:5000/auth/login');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': emailController.text.trim(),
+          'password': passwordController.text.trim(),
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final prefs = await SharedPreferences.getInstance();
+        if (data['role'] == 'user') {
+          await prefs.setInt('userId', data['user']['id']);
+          await prefs.setString('userName', data['user']['name']);
+          await prefs.setString('userData', jsonEncode(data['user']));
+        } else {
+          await prefs.setInt('userId', data['artist']['id']);
+          await prefs.setString('userName', data['artist']['name']);
+          await prefs.setString('userData', jsonEncode(data['artist']));
+        }
+        await prefs.setString('role', data['role']);
+        await prefs.setString('token', data['token']);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data['error'] ?? "Login failed")));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Network error")));
+    } finally {
+      setState(() => isLoading = false);
+    }
   }
-}
 
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // This is your Brand Blue color
-    const Color brandBlue = Color(0xFF0091EA);
-
-    return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Dark background
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 50),
-
-              const Spacer(flex: 2),
-
-              // 1. Top Logo (FIXED: Uses an Icon instead of a missing image)
-              Image.asset(
-                'assets/AM_logo.png', // <--- Change this to your file name
-                height: 120, // Adjust height to make it bigger/smaller
-                width: 120,
-                fit: BoxFit.contain, // This stops it from stretching
-              ),
-              const SizedBox(height: 30),
-
-              // 2. Headings
-              const Text(
-                "Create an account or login to start",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                "Enter your email",
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-
-              const SizedBox(height: 24),
-
-              // 3. Email Input Field
-              TextField(
-                style: const TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "email@domain.com",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // 4. Continue Button
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const GigPostPage()),
-                    );
-                    
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: brandBlue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    "Continue",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // 5. "Or" Divider
-              const Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.grey, thickness: 2)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: Text("or", style: TextStyle(color: Colors.grey)),
-                  ),
-                  Expanded(child: Divider(color: Colors.grey, thickness: 2)),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
-              // 6. Social Buttons
-              _buildSocialButton(
-                "Continue with Google",
-                Icons.email,
-                Colors.red,
-              ),
-              const SizedBox(height: 12),
-              _buildSocialButton(
-                "Continue with Apple",
-                Icons.phone_iphone,
-                Colors.black,
-              ),
-
-              const Spacer(flex: 2),
-
-              // 7. Footer / Legal Text
-              RichText(
-                textAlign: TextAlign.center,
-                text: const TextSpan(
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                  children: [
-                    TextSpan(text: "By clicking continue, you agree to our "),
-                    TextSpan(
-                      text: "Terms of Service",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextSpan(text: "\nand "),
-                    TextSpan(
-                      text: "Privacy Policy",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // Bottom ArtistMatch Branding
-              Image.asset(
-                'assets/AM_logo2.png', // Make sure this matches your filename exactly
-                height:
-                    150, // You can change this number to make it bigger/smallerwifh
-                width: 400,
-                fit: BoxFit.contain,
-              ),
-
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
+  Widget _inputField(String hint, TextEditingController controller, {bool isPassword = false}) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      style: const TextStyle(color: Colors.black),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        hintText: hint,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
       ),
     );
   }
 
-  // Helper widget to avoid repeating code for buttons
-  Widget _buildSocialButton(String text, IconData icon, Color iconColor) {
-    return SizedBox(
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black, // Text color
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: iconColor, size: 24),
-            const SizedBox(width: 12),
-            Text(
-              text,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-          ],
+  @override
+  Widget build(BuildContext context) {
+    const Color brandBlue = Color(0xFF0091EA);
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF121212),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              const SizedBox(height: 60),
+              Image.asset('assets/AM_logo.png', height: 120),
+              const SizedBox(height: 30),
+              const Text("Login to your account", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              const Text("Enter your email and password", style: TextStyle(color: Colors.grey)),
+              const SizedBox(height: 24),
+              _inputField("Email", emailController),
+              const SizedBox(height: 16),
+              _inputField("Password", passwordController, isPassword: true),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPasswordEmailPage())),
+                  child: const Text("Forgot Password?", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: isLoading ? null : loginUser,
+                  style: ElevatedButton.styleFrom(backgroundColor: brandBlue, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                  child: isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text("Login", style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Don't have an account? ", style: TextStyle(color: Colors.grey)),
+                  GestureDetector(
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const UserSignup())),
+                    child: const Text("Sign Up", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
+              Image.asset('assets/AM_logo2.png', height: 150),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

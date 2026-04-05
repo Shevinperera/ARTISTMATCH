@@ -1,60 +1,54 @@
 import 'package:flutter/material.dart';
-import 'gig_post_page.dart'; // Make sure this path is correct!
 
 class CustomNavBar extends StatelessWidget {
   final int currentIndex;
+  final Function(int) onTap; // This lets MainScreen know a button was pressed
 
-  const CustomNavBar({super.key, required this.currentIndex});
-
-  void _onTap(BuildContext context, int index) {
-    // If we click the tab we are already on, do nothing!
-    if (index == currentIndex) return; 
-
-    // Figure out which page to go to based on the icon clicked
-    Widget nextPage;
-    switch (index) {
-      case 0:
-        nextPage = const GigPostPage(); // 0 is Home
-        break;
-      case 4:
-        // 4 is Profile. Just a placeholder until you build the real one!
-        nextPage = const Scaffold(backgroundColor: Colors.black, body: Center(child: Text("Profile Page", style: TextStyle(color: Colors.white)))); 
-        break;
-      default:
-        // Placeholder for Explore, Add, and Alerts
-        nextPage = const Scaffold(backgroundColor: Colors.black, body: Center(child: Text("Coming Soon", style: TextStyle(color: Colors.white))));
-    }
-
-    // Switch the page instantly without the "sliding" animation
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation1, animation2) => nextPage,
-        transitionDuration: Duration.zero, 
-        reverseTransitionDuration: Duration.zero,
-      ),
-    );
-  }
+  const CustomNavBar({
+    super.key, 
+    required this.currentIndex, 
+    required this.onTap, 
+  });
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       backgroundColor: Colors.black,
-      selectedItemColor: const Color(0xFF0091EA), // Brand Blue
+      selectedItemColor: const Color(0xFF0091EA), 
       unselectedItemColor: Colors.grey,
       type: BottomNavigationBarType.fixed,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       
-      currentIndex: currentIndex, // Highlights the correct icon
-      onTap: (index) => _onTap(context, index), // Runs the routing logic
+      currentIndex: currentIndex, 
+      onTap: onTap, // Passes the tap back to MainScreen
       
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-        BottomNavigationBarItem(icon: Icon(Icons.explore), label: ""),
-        BottomNavigationBarItem(icon: Icon(Icons.add_box_outlined, size: 30), label: ""),
-        BottomNavigationBarItem(icon: Icon(Icons.notifications), label: ""),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home),
+          label: "",
+        ),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.explore_outlined),
+          activeIcon: Icon(Icons.explore),
+          label: "",
+        ),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.star_border_outlined, size: 30),
+          activeIcon: Icon(Icons.star, size: 30),
+          label: "",
+        ),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.chat_bubble_outline),
+          activeIcon: Icon(Icons.chat_bubble_sharp),
+          label: "",
+        ),
+                BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
+          label: "",
+        ),
       ],
     );
   }

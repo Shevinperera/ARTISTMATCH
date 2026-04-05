@@ -1,11 +1,16 @@
-# ArtistMatch 🎵
+# artistmatch
 
-**ArtistMatch** is a mobile networking and collaboration platform designed exclusively for musicians, DJs, and industry professionals. Built with Flutter, the app empowers artists to easily connect, share their work, and discover new gig opportunities within their local community. 
+A new Flutter project.
 
-Whether you are looking for a bandmate, scouting talent for an event, or just trying to expand your musical network, ArtistMatch streamlines the process of bringing creative minds together.
+## Getting Started
 
-### Key Features
-* **Artist Profiles:** Showcase your talent, genre, and past work.
-* **Community Feed:** Stay updated with local music scenes and collaborations.
-* **Gig Discovery:** Post and apply for upcoming events and performances.
-* **Seamless Networking:** Connect directly with other artists and event organizers.
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

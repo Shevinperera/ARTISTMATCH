@@ -1,0 +1,3 @@
+﻿frontend/assets/trending_banner.png
+lib/main.dart
+pubspec.lock

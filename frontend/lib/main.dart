@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'Pages/login_page.dart'; 
+import 'Pages/login_page.dart';
+import 'Pages/splash_screen.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 2. Now it is safe to boot up the app!
   runApp(const MainApp());
 }
 
@@ -13,8 +18,8 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false, 
       
-      // --- CHANGE THIS LINE ---
-      home: SignInScreen(), 
+      
+      home: SplashScreen(),
     );
   }
 }
